@@ -28,7 +28,7 @@ function CategoryList(props) {
       <TitleRow
         title={title}
         seeMoreLink={'Category'}
-        options={{name: 'Main shirt'}}
+        options={{name: title, id}}
       />
       <SizedBox height={16} />
       <ScrollView horizontal={true}>

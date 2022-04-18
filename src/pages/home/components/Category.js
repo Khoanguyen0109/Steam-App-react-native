@@ -22,7 +22,7 @@ function Category(props) {
   console.log('id', id);
   const navigation = useNavigation();
   const onRoute = () => {
-    navigation.navigate('Category', { name: category , itemId: id });
+    navigation.navigate('Category', { name: category , id: id });
   };
   return <Pressable style={styles.root} onPress={onRoute}>{icon}</Pressable>;
 }

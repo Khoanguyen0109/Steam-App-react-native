@@ -15,7 +15,8 @@ const styles = StyleSheet.create({
 });
 function Category(props) {
   const route = useRoute();
-  const {itemId} = route.params;
+  console.log('route.params', route.params)
+  const {id} = route.params;
   console.log('object', route.params)
   const {publicAxios} = useContext(AxiosContext);
 
@@ -23,7 +24,7 @@ function Category(props) {
   const getProduct = async () => {
     try {
       const res = await publicAxios.get('/products', {
-        params: {categoryId: itemId},
+        params: {categoryId: id},
       });
       setProductList(res.data.data);
     } catch (error) {
