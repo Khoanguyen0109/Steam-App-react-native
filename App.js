@@ -160,7 +160,7 @@ export default function App() {
   const isLogin = authContext?.authState?.authenticated;
   const isShop = authContext?.authState?.isShop;
   // const isShop = true;
-
+  console.log('authContext', authContext)
   // const isLogin = false;
   console.log('isLogin', isLogin);
   const [status, setStatus] = useState('loading');
@@ -177,13 +177,13 @@ export default function App() {
       });
       setStatus('success');
     } catch (error) {
-      setStatus('error');
-      console.log(`Keychain Error: ${error.message}`);
-      authContext.setAuthState({
-        currentUser: null,
-        accessToken: null,
-        authenticated: false,
-      });
+      // setStatus('error');
+      // console.log(`Keychain Error: ${error.message}`);
+      // authContext.setAuthState({
+      //   currentUser: null,
+      //   accessToken: null,
+      //   authenticated: false,
+      // });
     }
   }, []);
 

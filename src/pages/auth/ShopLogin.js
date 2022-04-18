@@ -94,7 +94,7 @@ function ShopLogin(props) {
       });
 
       await Keychain.setGenericPassword(
-        'token',
+        'accessToken',
         JSON.stringify({
           accessToken,
         }),

@@ -1,10 +1,12 @@
-import { useNavigation } from '@react-navigation/native';
-import { Text, View } from 'native-base';
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
+import {Text, View} from 'native-base';
+import React, {useContext, useState, useEffect} from 'react';
+import {StyleSheet} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import EButton from '../../components/EButton/Ebutton';
 import SizedBox from '../../components/SizeBox/SizeBox';
+import {AxiosContext} from '../../provider/AxiosProvider';
+import { IMAGE_ENDPOINT } from '../../utils';
 import ProductRow from './components/ProductRow';
 
 const styles = StyleSheet.create({
@@ -30,19 +32,40 @@ const styles = StyleSheet.create({
 
 function Cart(props) {
   const navigation = useNavigation();
-  const cartList = [1, 2];
+  // const cartList = [1, 2];
+  const [cartList, setCartList] = useState([])
   const totalItemPrice = 3212;
+  const {publicAxios, authAxios} = useContext(AxiosContext);
+  console.log('cartList', cartList)
   const onRemoveProduct = () => {};
 
+  const getCart = async () => {
+    try {
+      const res = await authAxios.get('/carts');
+      console.log('rest.data.data :>> ', res.data.data);
+      const data = res.data.data
+
+      if(data?.[0]){
+        setCartList(data[0].cartItems)
+
+      }
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
+  };
+
+  useEffect(()=>{
+    getCart()
+  },[])
   return (
     <ScrollView style={styles.root}>
-      {cartList.map((item) => (
+      {cartList.map(item => (
         <ProductRow
-          name='FS - Nike Air Max 270 React Native Native Native'
+          name={item.name}
           image={{
-            uri: 'https://static.nike.com/a/images/t_default/lvzcsilw4gmh2gi2hiq4/revolution-5-road-running-shoes-szF7CS.png',
+            uri: `${IMAGE_ENDPOINT}/${item.images?.[0].name}`,
           }}
-          price={204}
+          price={item.price}
           onRemoveProduct={onRemoveProduct}
         />
       ))}
@@ -59,10 +82,10 @@ function Cart(props) {
         </View>
         <SizedBox height={12} />
         <View style={styles.summaryItem}>
-          <Text fontSize={12} fontWeight='700' color='#223263'>
+          <Text fontSize={12} fontWeight="700" color="#223263">
             Total
           </Text>
-          <Text fontSize={12} fontWeight='700' color='#006FBF'>
+          <Text fontSize={12} fontWeight="700" color="#006FBF">
             {' '}
             $12321312
           </Text>
@@ -70,7 +93,7 @@ function Cart(props) {
       </View>
       <SizedBox height={16} />
       <EButton
-        title='Check out'
+        title="Check out"
         onPress={() => navigation.navigate('ShipTo')}
       />
     </ScrollView>

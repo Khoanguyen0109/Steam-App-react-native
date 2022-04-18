@@ -62,7 +62,7 @@ const AxiosProvider = ({ children }) => {
         });
 
         await Keychain.setGenericPassword(
-          'token',
+          'accessToken',
           JSON.stringify({
             accessToken: tokenRefreshResponse.data.accessToken,
             refreshToken: authContext.authState.refreshToken,
@@ -79,7 +79,7 @@ const AxiosProvider = ({ children }) => {
       });
   };
 
-  // createAuthRefreshInterceptor(authAxios, refreshAuthLogic, {});
+  createAuthRefreshInterceptor(authAxios, refreshAuthLogic, {});
 
   return (
     <Provider

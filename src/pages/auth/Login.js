@@ -88,12 +88,12 @@ function Login(props) {
       const {token ,user } = response.data;
       authContext.setAuthState({
         currentUser: user,
-        token,
+        accessToken: token,
         authenticated: true,
       });
 
       await Keychain.setGenericPassword(
-        'token',
+        'accessToken',
         JSON.stringify({
           token,
         }),

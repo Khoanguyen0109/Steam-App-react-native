@@ -46,7 +46,7 @@ function Home() {
         </View>
         <SizedBox height={48} />
         <View>
-          <TitleRow title={'Category'} seeMoreLink={'MoreCategory'} options={id} />
+          <TitleRow title={'Category'} seeMoreLink={'MoreCategory'}  />
           <SizedBox height={16} />
           <ScrollView horizontal={true}>
             {categories.map(item => (

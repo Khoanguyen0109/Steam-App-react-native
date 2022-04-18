@@ -1,9 +1,10 @@
 import {useRoute} from '@react-navigation/native';
-import {Avatar, Center, Image, ScrollView, Spinner, Text, View} from 'native-base';
+import {Avatar, Center, Image, ScrollView, Spinner, Text, Toast, View} from 'native-base';
 import React, {useContext, useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import EButton from '../../components/EButton/Ebutton';
 import SizedBox from '../../components/SizeBox/SizeBox';
+import { AuthContext } from '../../provider/AuthProvider';
 import { AxiosContext } from '../../provider/AxiosProvider';
 
 const styles = StyleSheet.create({
@@ -49,7 +50,8 @@ const styles = StyleSheet.create({
 function ProductDetail(props) {
   const route = useRoute();
   const {id} = route.params;
-  const {publicAxios} = useContext(AxiosContext);
+  const {publicAxios , authAxios} = useContext(AxiosContext);
+  const authContext = useContext(AuthContext)
   const [productDetail, setProductDetail] = useState({});
   const product = {
     name: 'Nike Air Zoom Pegasus 36 Miami',
@@ -76,7 +78,21 @@ function ProductDetail(props) {
   useEffect(() => {
     getProductDetail();
   }, []);
-  console.log('productDetail', productDetail);
+
+  const addToCart = async() => {
+    try {
+        const res = await authAxios.post('/carts' , {
+          productId: id,
+          quantity: 1
+        })
+        Toast.show({description: "Add To Cart"})
+    } catch (error) {
+        console.log('error :>> ', error);
+        Toast.show({description: "Add To Cart Failed"})
+
+    }
+  }
+
   if(!productDetail) {
     return <View>
       <Center>
@@ -139,7 +155,7 @@ function ProductDetail(props) {
           visual experience.
         </Text>
         <SizedBox height={16} />
-        <EButton title="Add To Cart" />
+        <EButton title="Add To Cart"  onPress={addToCart}/>
       </View>
     </ScrollView>
   );
