@@ -72,14 +72,14 @@ const AxiosProvider = ({ children }) => {
         return Promise.resolve();
       })
       .catch((e) => {
-        authContext.setAuthState({
-          accessToken: null,
-          refreshToken: null,
-        });
+        // authContext.setAuthState({
+        //   accessToken: null,
+        //   refreshToken: null,
+        // });
       });
   };
 
-  createAuthRefreshInterceptor(authAxios, refreshAuthLogic, {});
+  // createAuthRefreshInterceptor(authAxios, refreshAuthLogic, {});
 
   return (
     <Provider

@@ -16,6 +16,7 @@ import SizedBox from '../../components/SizeBox/SizeBox';
 import EButton from '../../components/EButton/Ebutton';
 import FormInput from '../../components/EInput/FormInput';
 import {AxiosContext} from '../../provider/AxiosProvider';
+import { AuthContext } from '../../provider/AuthProvider';
 
 const styles = StyleSheet.create({
   root: {
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
 function ShopLogin(props) {
   const {navigation} = props;
   const {publicAxios} = useContext(AxiosContext);
-
+  const authContext = useContext(AuthContext)
   const [show, setShow] = useState(false);
 
   const {control, handleSubmit, error} = useForm({
@@ -76,6 +77,7 @@ function ShopLogin(props) {
 
   const onLogin = async data => {
     console.log('data :>> ', data);
+    const {email, password} = data;
     try {
       const response = await publicAxios.post('/shops/login', {
         email,
@@ -83,11 +85,12 @@ function ShopLogin(props) {
       });
       console.log('first', response.data);
 
-      const {accessToken, user} = response.data;
+      const {token, shop} = response.data;
       authContext.setAuthState({
-        currentUser: user,
-        accessToken,
+        currentUser: shop,
+        accessToken: token,
         authenticated: true,
+        isShop: true
       });
 
       await Keychain.setGenericPassword(
@@ -96,7 +99,14 @@ function ShopLogin(props) {
           accessToken,
         }),
       );
+      await Keychain.setGenericPassword(
+        'token',
+        JSON.stringify({
+          accessToken,
+        }),
+      );
     } catch (error) {
+      console.log('object', error)
       Toast.show({description: 'Login Failed'});
 
       // Alert.alert('Login Failerd' );
@@ -176,8 +186,6 @@ function ShopLogin(props) {
           {/* <SizedBox height={28} /> */}
           <EButton title="Sign in" onPress={handleSubmit(onLogin)} />
           <SizedBox height={12} />
-          <Divider width={50} />
-          <EButton title="Sign in" onPress={handleSubmit(onLogin)} />
         </KeyboardAvoidingView>
 
         <View style={styles.footer}>

@@ -85,7 +85,6 @@ function Login(props) {
         email: data.email,
         password: data.password,
       });
-      console.log('response.data', response.data)
       const {token ,user } = response.data;
       authContext.setAuthState({
         currentUser: user,
@@ -178,13 +177,16 @@ function Login(props) {
           {/* <SizedBox height={28} /> */}
           <EButton title="Sign in" onPress={handleSubmit(onLogin)} />
           <SizedBox height={12} />
-          <Divider width={50} />
+          <Divider width='full' />
           <SizedBox height={12} />
 
           <Button
-            title="Login Shop"
+           
+            
             onPress={() => navigation.navigate('ShopLogin')}
-          />
+          >
+             Login Shop
+          </Button>
           <View style={styles.footer}>
             <Center>
               <Text style={styles.subTitle}>

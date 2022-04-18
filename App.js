@@ -156,9 +156,11 @@ import * as Keychain from 'react-native-keychain';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 export default function App() {
-  const isShop = false;
   const authContext = useContext(AuthContext);
   const isLogin = authContext?.authState?.authenticated;
+  // const isShop = authContext?.authState?.isShop;
+  const isShop = true
+
   // const isLogin = false;
   console.log('isLogin', isLogin)
   const [status, setStatus] = useState('loading');
@@ -166,6 +168,7 @@ export default function App() {
   const loadJWT = useCallback(async () => {
     try {
       const value = await Keychain.getGenericPassword();
+
       const jwt = JSON.parse(value.password);
 
       authContext.setAuthState({
