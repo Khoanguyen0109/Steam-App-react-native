@@ -158,11 +158,11 @@ const Stack = createStackNavigator();
 export default function App() {
   const authContext = useContext(AuthContext);
   const isLogin = authContext?.authState?.authenticated;
-  // const isShop = authContext?.authState?.isShop;
-  const isShop = true
+  const isShop = authContext?.authState?.isShop;
+  // const isShop = true;
 
   // const isLogin = false;
-  console.log('isLogin', isLogin)
+  console.log('isLogin', isLogin);
   const [status, setStatus] = useState('loading');
 
   const loadJWT = useCallback(async () => {
@@ -196,52 +196,51 @@ export default function App() {
   // }
 
   return (
-        <NativeBaseProvider>
-          <NavigationContainer>
-            {!isLogin ? (
-              <Stack.Navigator>
-                <Stack.Screen
-                  name="Login"
-                  options={{headerShown: false}}
-                  component={Login}
-                />
-                <Stack.Screen
-                  name="ShopLogin"
-                  options={{headerShown: false}}
-                  component={ShopLogin}
-                />
-                <Stack.Screen
-                  name="Register"
-                  options={{headerShown: false}}
-                  component={Register}
-                />
-              </Stack.Navigator>
-            ) : (
-              <Tab.Navigator>
-                <Tab.Screen
-                  options={{headerShown: false}}
-                  name="Home"
-                  // component={HomeStackScreen}
-                  component={isShop ? ShopAccountStackScreen : HomeStackScreen}
-                />
+    <NativeBaseProvider>
+      <NavigationContainer>
+        {!isLogin ? (
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Login"
+              options={{headerShown: false}}
+              component={Login}
+            />
+            <Stack.Screen
+              name="ShopLogin"
+              options={{headerShown: false}}
+              component={ShopLogin}
+            />
+            <Stack.Screen
+              name="Register"
+              options={{headerShown: false}}
+              component={Register}
+            />
+          </Stack.Navigator>
+        ) : (
+          <Tab.Navigator>
+            <Tab.Screen
+              options={{headerShown: false}}
+              name="Home"
+              // component={HomeStackScreen}
+              component={isShop ? ShopAccountStackScreen : HomeStackScreen}
+            />
 
-                <Tab.Screen name="Discover" component={Discover} />
-                <Tab.Screen
-                  name="Cart"
-                  options={{headerShown: false}}
-                  component={CartStackScreen}
-                />
+            <Tab.Screen name="Discover" component={Discover} />
+            <Tab.Screen
+              name="Cart"
+              options={{headerShown: false}}
+              component={CartStackScreen}
+            />
 
-                <Tab.Screen
-                  name="Account"
-                  component={AccountStackScreen}
-                  options={{headerShown: false}}
-                />
-              </Tab.Navigator>
-            )}
-          </NavigationContainer>
-        </NativeBaseProvider>
-
+            <Tab.Screen
+              name="Account"
+              component={AccountStackScreen}
+              options={{headerShown: false}}
+            />
+          </Tab.Navigator>
+        )}
+      </NavigationContainer>
+    </NativeBaseProvider>
 
     // </GestureHandlerRootView>
   );

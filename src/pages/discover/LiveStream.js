@@ -108,7 +108,7 @@ function LiveStream(props) {
       <NodeCameraView
         style={styles.camView}
         ref={camViewRef}
-        outputUrl={'rtmp://192.168.0.10/live/stream'}
+        outputUrl={streamUrl}
         camera={{cameraId: 1, cameraFrontMirror: true}}
         audio={{bitrate: 32000, profile: 1, samplerate: 44100}}
         video={{
