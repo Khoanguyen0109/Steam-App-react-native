@@ -1,11 +1,12 @@
 import {useNavigation} from '@react-navigation/native';
 import {Image, Text, View} from 'native-base';
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet} from 'react-native';
 import {
   TouchableHighlight,
   TouchableOpacity,
 } from 'react-native-gesture-handler';
+import { AuthContext } from '../../provider/AuthProvider';
 import SizedBox from '../SizeBox/SizeBox';
 
 const styles = StyleSheet.create({
@@ -60,10 +61,19 @@ const styles = StyleSheet.create({
 function ProductCard(props) {
   const {id, image, name, price, discountPrice, percentDiscount} = props;
   const navigation = useNavigation();
+  const authContext = useContext(AuthContext);
+  const isShop = authContext?.authState?.isShop;
+  const onRoute = () => {
+    if (isShop) {
+      navigation.navigate('CreateProduct', {name: name, id});
+    } else {
+    }
+    navigation.navigate('ProductDetail', {name: name, id});
+  };
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('ProductDetail', {name: name, id});
+        onRoute();
       }}>
       <View style={styles.root}>
         <View style={styles.containerImage}>

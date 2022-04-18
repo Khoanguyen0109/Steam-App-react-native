@@ -153,7 +153,7 @@ function ShopLogin(props) {
             placeholder="Password"
             autoCompleteType="password"
             returnKeyType="done"
-            secureTextEntry={show}
+            secureTextEntry={!show}
             textContentType="password"
             rules={{required: 'Password is required'}}
             // type= {show}
