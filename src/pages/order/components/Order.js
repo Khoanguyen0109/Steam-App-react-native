@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { Divider, Pressable, Text, View } from 'native-base';
-import React from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import { StyleSheet } from 'react-native';
 import SizedBox from '../../../components/SizeBox/SizeBox';
 
@@ -41,6 +41,7 @@ function Order(props) {
   const onRoute = () =>{
     navigation.navigate("OrderDetail")
   }
+  
   return (
     <Pressable style={styles.root} onPress={onRoute}>
       <Text style={styles.name}>Order #{id}</Text>

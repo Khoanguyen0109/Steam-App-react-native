@@ -55,7 +55,6 @@ function Cart(props) {
       console.log('error :>> ', error);
     }
   };
-  console.log('cartList', cartList);
   useEffect(() => {
     getCart();
   }, []);
@@ -102,7 +101,7 @@ function Cart(props) {
       <SizedBox height={16} />
       <EButton
         title="Check out"
-        onPress={() => navigation.navigate('ShipTo')}
+        onPress={() => navigation.navigate('ShipTo' , {fromCart: true})}
       />
     </ScrollView>
   );

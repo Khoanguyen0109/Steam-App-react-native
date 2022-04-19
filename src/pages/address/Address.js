@@ -1,4 +1,4 @@
-import { Icon, IconButton, View, Text } from 'native-base';
+import { Icon, IconButton, View, Text, Pressable } from 'native-base';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import EButton from '../../components/EButton/Ebutton';
@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 16,
     paddingVertical: 24,
-    borderColor: '#EBF0FF',
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 16,
@@ -28,9 +27,11 @@ const styles = StyleSheet.create({
 });
 function Address(props) {
   const navigation = useNavigation();
-  const { id, name, description, phone, onEdit, onRemoveAddress } = props;
+  const { selected, onSelect,  id, name, description, phone, onEdit, onRemoveAddress } = props;
   return (
-    <View style={styles.root}>
+    <Pressable onPress={onSelect}>
+
+    <View style={styles.root} borderColor={selected? '#40BFFF' : '#EBF0FF' }>
       <Text style={styles.name}>{name}</Text>
       <SizedBox height={16} />
       <Text style={styles.description}>
@@ -64,6 +65,8 @@ function Address(props) {
         )}
       </View>
     </View>
+    </Pressable>
+
   );
 }
 
