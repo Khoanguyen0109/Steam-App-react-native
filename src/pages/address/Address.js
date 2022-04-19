@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
 function Address(props) {
   const navigation = useNavigation();
   const { selected, onSelect,  id, name, description, phone, onEdit, onRemoveAddress } = props;
+
   return (
     <Pressable onPress={onSelect}>
 
@@ -53,7 +54,7 @@ function Address(props) {
         <SizedBox width={30} />
         {onRemoveAddress && (
           <IconButton
-            onPress={onRemoveAddress}
+            onPress={()=> onRemoveAddress(id)}
             icon={
               <Icon
                 as={<MaterialIcons name='delete-outline' />}

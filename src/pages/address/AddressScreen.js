@@ -36,6 +36,17 @@ function AddressScreen() {
       console.log('error :>> ', error);
     }
   };
+  const removeAddress = async(id)=> {
+    try {
+      console.log('id', id)
+      const res = await authAxios.delete(`/shippingAddresses/${id}`);
+      const filter = addressList.filter(item => item.id !== id)
+      console.log('addressList', addressList)
+      setAddressList([...filter]);
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
+  }
   useEffect(() => {
     getAddressList();
     getCart()
@@ -56,11 +67,11 @@ function AddressScreen() {
             description={`${item.streetAddress}, ${item?.detailAddress}, ${item.city}, ${item.state} , ${item.country} `}
             phone={item.phoneNumber}
             onEdit={true}
-            onRemoveAddress={onRemoveAddress}
+            onRemoveAddress={removeAddress}
           />
         ))}
       </ScrollView>
-     {  route.params?.fromCart && <EButton title={"Create Order"} />} 
+     {  route.params?.fromCart && selectedAddress && <EButton title={"Create Order"} />} 
     </Layout>
   );
 }
