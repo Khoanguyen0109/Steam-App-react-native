@@ -99,7 +99,6 @@ function Login(props) {
         }),
       );
     } catch (error) {
-      console.log('error', error)
       Toast.show({description: 'Login Failed'});
     }
   };
@@ -111,7 +110,7 @@ function Login(props) {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.content}>
           <Center>
-            <Text style={styles.title}>Shop Login</Text>
+            <Text style={styles.title}>Welcome</Text>
             <SizedBox height={8} />
 
             <Text style={styles.subTitle}>Sign in to continue</Text>

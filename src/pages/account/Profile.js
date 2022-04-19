@@ -41,14 +41,11 @@ const styles = StyleSheet.create({
 });
 
 function Profile(props) {
-  const profile = {
-    name: 'Martin',
-    email: 'martin@gmail.com',
-    gender: 1,
-  };
+
   const authContext = useContext(AuthContext);
+  const {authState } = authContext
   const renderGender = () => {};
-  const isShop = false;
+  const isShop = authState.isShop;
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     // let result = await ImagePicker.launchImageLibraryAsync({
@@ -65,6 +62,7 @@ function Profile(props) {
   const onSignOut = () =>{
     authContext.logout()
   }
+  const name = `${authState?.currentUser?.firstName} ${authState?.currentUser?.lastName} `
   return (
     <SafeAreaView>
       <View style={styles.info}>
@@ -80,15 +78,15 @@ function Profile(props) {
           }
         />
         <SizedBox width={12} />
-        <Text style={styles.name}>Shop name</Text>
+        <Text style={styles.name}>{name}</Text>
       </View>
       <SizedBox width={12} />
 
       <View style={styles.root}>
         <View>
-          <Row icon="person-outline" title="Name" value={profile.name} />
-          <Row icon={'person'} title="Gender" value={GENDER[profile.gender]} />
-          <Row icon="email" title="Email" value={profile.email} />
+          <Row icon="person-outline" title="Name" value={name} />
+          <Row icon={'person'} title="Gender" value={GENDER[authState?.currentUser?.gender]} />
+          <Row icon="email" title="Email" value={authState?.currentUser?.email} />
         </View>
         <EButton title="Sign out" onPress={onSignOut} />
       </View>

@@ -48,7 +48,7 @@ function CartStackScreen() {
       <Stack.Screen
         name='CreateAddress'
         options={{
-          title: 'Add Address',
+          title: 'Address',
         }}
         component={CreateAddress}
       />

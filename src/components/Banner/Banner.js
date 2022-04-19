@@ -29,7 +29,7 @@ function Banner(props) {
 
     >
       <View style={styles.innerContainer}>
-        <View
+        {/* <View
           style={{
             width: '100%',
             position: 'absolute',
@@ -39,7 +39,7 @@ function Banner(props) {
           }}
         >
           <Text style={styles.text}>Centered text</Text>
-        </View>
+        </View> */}
       </View>
     </ImageBackground>
   );

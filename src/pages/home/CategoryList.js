@@ -6,6 +6,7 @@ import TitleRow from './components/TitleRow';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import {AuthContext} from '../../provider/AuthProvider';
 import {AxiosContext} from '../../provider/AxiosProvider';
+import { IMAGE_ENDPOINT } from '../../utils';
 function CategoryList(props) {
   const {id, title} = props;
   const {publicAxios} = useContext(AxiosContext);
@@ -37,7 +38,7 @@ function CategoryList(props) {
             id={item.id}
             name={item.name}
             image={{
-              uri: 'https://static.nike.com/a/images/t_default/lvzcsilw4gmh2gi2hiq4/revolution-5-road-running-shoes-szF7CS.png',
+              uri: `${IMAGE_ENDPOINT}/${item.images[0].name}`
             }}
             price={item.price}
             // discountPercent={24}

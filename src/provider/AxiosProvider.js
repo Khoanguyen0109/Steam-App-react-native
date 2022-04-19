@@ -79,7 +79,7 @@ const AxiosProvider = ({ children }) => {
       });
   };
 
-  createAuthRefreshInterceptor(authAxios, refreshAuthLogic, {});
+  // createAuthRefreshInterceptor(authAxios, refreshAuthLogic, {});
 
   return (
     <Provider

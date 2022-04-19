@@ -6,7 +6,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import EButton from '../../components/EButton/Ebutton';
 import SizedBox from '../../components/SizeBox/SizeBox';
 import {AxiosContext} from '../../provider/AxiosProvider';
-import { IMAGE_ENDPOINT } from '../../utils';
+import {IMAGE_ENDPOINT} from '../../utils';
 import ProductRow from './components/ProductRow';
 
 const styles = StyleSheet.create({
@@ -33,39 +33,47 @@ const styles = StyleSheet.create({
 function Cart(props) {
   const navigation = useNavigation();
   // const cartList = [1, 2];
-  const [cartList, setCartList] = useState([])
-  const totalItemPrice = 3212;
+  const [cartList, setCartList] = useState([]);
+  const [cart, setCart] = useState([]);
   const {publicAxios, authAxios} = useContext(AxiosContext);
-  console.log('cartList', cartList)
   const onRemoveProduct = () => {};
 
   const getCart = async () => {
     try {
       const res = await authAxios.get('/carts');
-      console.log('rest.data.data :>> ', res.data.data);
-      const data = res.data.data
-
-      if(data?.[0]){
-        setCartList(data[0].cartItems)
-
-      }
+      const data = res.data.data;
+      setCart(data);
+      const cartList = [];
+      data.map(cartShop => {
+        cartShop.cartItems.map(item =>{
+          cartList.push(item)
+        })
+        // cartList.push(cartShop.cartItems);
+      });
+      setCartList(cartList);
     } catch (error) {
       console.log('error :>> ', error);
     }
   };
-
-  useEffect(()=>{
-    getCart()
-  },[])
+  console.log('cartList', cartList);
+  useEffect(() => {
+    getCart();
+  }, []);
+  const totalItem = cartList.reduce(function (acc, obj) {
+    console.log('acc', obj)
+    return acc + (obj?.quantity * obj?.product.price );
+  } , 0);
+  console.log('object', totalItem)
   return (
     <ScrollView style={styles.root}>
       {cartList.map(item => (
         <ProductRow
-          name={item.name}
+          name={item?.product?.name}
           image={{
-            uri: `${IMAGE_ENDPOINT}/${item.images?.[0].name}`,
+            uri: `${IMAGE_ENDPOINT}/${item?.product?.images?.[0].name}`,
           }}
-          price={item.price}
+          price={item?.product?.price}
+          quantity={item.quantity}
           onRemoveProduct={onRemoveProduct}
         />
       ))}
@@ -73,7 +81,7 @@ function Cart(props) {
       <View style={styles.summary}>
         <View style={styles.summaryItem}>
           <Text fontSize={12}>Items ({`${cartList.length}`})</Text>
-          <Text fontSize={12}>${totalItemPrice}</Text>
+          <Text fontSize={12}>${totalItem}</Text>
         </View>
         <SizedBox height={12} />
         <View style={styles.summaryItem}>
@@ -87,7 +95,7 @@ function Cart(props) {
           </Text>
           <Text fontSize={12} fontWeight="700" color="#006FBF">
             {' '}
-            $12321312
+            ${totalItem}
           </Text>
         </View>
       </View>

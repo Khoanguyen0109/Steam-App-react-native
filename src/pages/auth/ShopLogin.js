@@ -188,20 +188,6 @@ function ShopLogin(props) {
           <SizedBox height={12} />
         </KeyboardAvoidingView>
 
-        <View style={styles.footer}>
-          <Center>
-            <Text style={styles.subTitle}>
-              Don’t have a account?{' '}
-              <Text
-                onPress={() => {
-                  navigation.push('Register');
-                }}
-                style={styles.registerLink}>
-                Register
-              </Text>
-            </Text>
-          </Center>
-        </View>
       </SafeAreaView>
     </View>
   );

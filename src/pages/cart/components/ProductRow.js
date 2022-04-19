@@ -30,6 +30,8 @@ const styles = StyleSheet.create({
   image: {
     width: 72,
     height: 72,
+    flex: 1,
+    resizeMode: 'contain',
   },
   content: {
     flex: 2,
@@ -58,8 +60,8 @@ const styles = StyleSheet.create({
   },
 });
 function ProductRow(props) {
-  const { onRemoveProduct , name , price , image } = props;
-  const [quantity, setQuantity] = useState(0);
+  const { product, onRemoveProduct , name , price , image  } = props;
+  const [quantity, setQuantity] = useState(props.quantity);
   const onAdd = () => {
     // if(quantity  ){
     setQuantity(quantity++);
@@ -70,7 +72,6 @@ function ProductRow(props) {
     }
     return setQuantity(quantity--);
   };
-
   return (
     <View style={styles.root}>
       <View style={styles.imageContainer}>

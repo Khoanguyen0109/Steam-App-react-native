@@ -28,13 +28,13 @@ const styles = StyleSheet.create({
 });
 function Address(props) {
   const navigation = useNavigation();
-  const { id, name, description, phone, onEdit, onRemove } = props;
+  const { id, name, description, phone, onEdit, onRemoveAddress } = props;
   return (
     <View style={styles.root}>
-      <Text style={styles.name}>Priscekila</Text>
+      <Text style={styles.name}>{name}</Text>
       <SizedBox height={16} />
       <Text style={styles.description}>
-        3711 Spring Hill Rd undefined Tallahassee, Nevada 52874 United States
+        {description}
       </Text>
       <SizedBox height={16} />
       <Text style={styles.description}>{phone}</Text>
@@ -50,9 +50,9 @@ function Address(props) {
           />
         )}
         <SizedBox width={30} />
-        {onRemove && (
+        {onRemoveAddress && (
           <IconButton
-            onPress={onRemove}
+            onPress={onRemoveAddress}
             icon={
               <Icon
                 as={<MaterialIcons name='delete-outline' />}

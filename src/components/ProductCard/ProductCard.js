@@ -31,8 +31,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   image: {
+    flex: 1,
     width: '100%',
     height: '100%',
+    resizeMode: 'contain',
   },
   container: {
     flex: 1,

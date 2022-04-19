@@ -1,20 +1,43 @@
-import { ScrollView, View } from 'native-base';
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
+import {ScrollView, View} from 'native-base';
+import React, {useContext, useState, useEffect} from 'react';
+import {StyleSheet} from 'react-native';
 import Layout from '../../layout/Layout';
+import {AxiosContext} from '../../provider/AxiosProvider';
 import Address from './Address';
 
 function AddressScreen() {
-  const addressList = [1, 2];
+  const route = useRoute();
+  const isFocused = useIsFocused();
+
+  const navigation = useNavigation();
   const onRemoveAddress = () => {};
+  const [addressList, setAddressList] = useState([]);
+  const {publicAxios, authAxios} = useContext(AxiosContext);
+
+  const getAddressList = async () => {
+    try {
+      const res = await authAxios.get('/shippingAddresses');
+      const data = res.data.data;
+      console.log('data', data);
+      setAddressList(data);
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
+  };
+  useEffect(() => {
+    getAddressList();
+  }, [isFocused]);
   return (
     <Layout>
       <View>
-        {addressList.map((item) => (
+        {addressList.map(item => (
           <Address
-            name='Presecet'
-            description='3711 Spring Hill Rd undefined Tallahassee, Nevada 52874 United States'
-            phone='+99 1234567890'
+            id={item.id}
+            name={`${item.firstName} ${item.lastName}`}
+            description={`${item.streetAddress}, ${item?.detailAddress}, ${item.city}, ${item.state} , ${item.country} `}
+            phone={item.phoneNumber}
+            onEdit={true}
             onRemoveAddress={onRemoveAddress}
           />
         ))}

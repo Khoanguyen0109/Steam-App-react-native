@@ -32,30 +32,30 @@ function Discover(props) {
   const {publicAxios, authAxios} = useContext(AxiosContext);
   const camViewRef = useRef();
 
-  const requestCameraPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.requestMultiple(
-        [PermissionsAndroid.PERMISSIONS.CAMERA],
-        {
-          title: 'Cool Photo App Camera And Microphone Permission',
-          message:
-            'Cool Photo App needs access to your camera ' +
-            'so you can take awesome pictures.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      setPermission(true);
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the camera');
-      } else {
-        console.log('Camera permission denied');
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  };
+  // const requestCameraPermission = async () => {
+  //   try {
+  //     const granted = await PermissionsAndroid.requestMultiple(
+  //       [PermissionsAndroid.PERMISSIONS.CAMERA],
+  //       {
+  //         title: 'Cool Photo App Camera And Microphone Permission',
+  //         message:
+  //           'Cool Photo App needs access to your camera ' +
+  //           'so you can take awesome pictures.',
+  //         buttonNeutral: 'Ask Me Later',
+  //         buttonNegative: 'Cancel',
+  //         buttonPositive: 'OK',
+  //       },
+  //     );
+  //     setPermission(true);
+  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //       console.log('You can use the camera');
+  //     } else {
+  //       console.log('Camera permission denied');
+  //     }
+  //   } catch (err) {
+  //     console.warn(err);
+  //   }
+  // };
   const getStream = async () => {
     try {
       const res = await authAxios.get(`/stream/${id}`);
@@ -66,9 +66,9 @@ function Discover(props) {
     }
   };
 
-  useEffect(() => {
-    requestCameraPermission();
-  }, []);
+  // useEffect(() => {
+  //   requestCameraPermission();
+  // }, []);
   useEffect(() => {
     if (permission) {
       getStream();

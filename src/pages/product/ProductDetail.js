@@ -1,11 +1,22 @@
 import {useRoute} from '@react-navigation/native';
-import {Avatar, Center, Image, ScrollView, Spinner, Text, Toast, View} from 'native-base';
+import {
+  Avatar,
+  Center,
+  Image,
+  ScrollView,
+  Spinner,
+  Text,
+  Toast,
+  View,
+} from 'native-base';
 import React, {useContext, useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import EButton from '../../components/EButton/Ebutton';
 import SizedBox from '../../components/SizeBox/SizeBox';
-import { AuthContext } from '../../provider/AuthProvider';
-import { AxiosContext } from '../../provider/AxiosProvider';
+import {AuthContext} from '../../provider/AuthProvider';
+import {AxiosContext} from '../../provider/AxiosProvider';
+import { IMAGE_ENDPOINT } from '../../utils';
+import { categories } from '../category/utils';
 
 const styles = StyleSheet.create({
   imageContainer: {
@@ -14,8 +25,10 @@ const styles = StyleSheet.create({
     height: 238,
   },
   image: {
+    flex: 1,
     width: '100%',
     height: '100%',
+    resizeMode: 'contain',
   },
   container: {
     paddingHorizontal: 16,
@@ -50,58 +63,51 @@ const styles = StyleSheet.create({
 function ProductDetail(props) {
   const route = useRoute();
   const {id} = route.params;
-  const {publicAxios , authAxios} = useContext(AxiosContext);
-  const authContext = useContext(AuthContext)
+  const {publicAxios, authAxios} = useContext(AxiosContext);
+  const authContext = useContext(AuthContext);
   const [productDetail, setProductDetail] = useState({});
-  const product = {
-    name: 'Nike Air Zoom Pegasus 36 Miami',
-    image: {
-      uri: 'https://static.nike.com/a/images/t_default/lvzcsilw4gmh2gi2hiq4/revolution-5-road-running-shoes-szF7CS.png',
-    },
-    price: 12,
-    shop: {
-      shopName: 'Mint',
-      image: {
-        uri: '',
-      },
-    },
-  };
+
   const getProductDetail = async () => {
     try {
       const res = await publicAxios.get(`/products/${1}`);
-      console.log('res.data', res.data)
-      setProductDetail(res.data.data);
+      console.log('res.data', res.data);
+      const data = res.data.data;
+      setProductDetail({
+        ...data,
+        image: {uri: `${IMAGE_ENDPOINT}/${data.images[0].name}`},
+      });
     } catch (error) {
       console.log('error :>> ', error);
     }
   };
+  console.log('productDetail.image', productDetail.image)
   useEffect(() => {
     getProductDetail();
   }, []);
 
-  const addToCart = async() => {
+  const addToCart = async () => {
     try {
-        const res = await authAxios.post('/carts' , {
-          productId: id,
-          quantity: 1
-        })
-        Toast.show({description: "Add To Cart"})
+      const res = await authAxios.post('/carts', {
+        productId: id,
+        quantity: 1,
+      });
+      Toast.show({description: 'Add To Cart'});
     } catch (error) {
-        console.log('error :>> ', error);
-        Toast.show({description: "Add To Cart Failed"})
-
+      console.log('error :>> ', error);
+      Toast.show({description: 'Add To Cart Failed'});
     }
-  }
+  };
 
-  if(!productDetail) {
-    return <View>
-      <Center>
-        <Spinner/>
-      </Center>
-    </View>
+  if (!productDetail) {
+    return (
+      <View>
+        <Center>
+          <Spinner />
+        </Center>
+      </View>
+    );
   }
-  const {name, image, price, shop = {}} = productDetail;
-
+  const {name, image, price, size, category, description, shop = {}} = productDetail;
   return (
     <ScrollView>
       <View style={styles.imageContainer}>
@@ -116,24 +122,21 @@ function ProductDetail(props) {
         <View display="flex" flexDirection="row" alignItems="center">
           {/* <Avatar source={shop.image} /> */}
           <SizedBox width={8} />
-          <Text style={styles.title}>{shop.firstName} {shop.lastName}</Text>
+          <Text style={styles.title}>
+            {shop.firstName} {shop.lastName}
+          </Text>
         </View>
-        <SizedBox height={24} />
-        <Text style={styles.title}>Specification</Text>
+        {/* <SizedBox height={24} />
+        <Text style={styles.title}>Specification</Text> */}
         <SizedBox height={12} />
         <View
           display="flex"
           flexDirection="row"
           justifyContent="space-between"
           alignItems="flex-start">
-          <Text style={styles.subtitle}>Shown</Text>
-          <View display="flex" flexDirection="column" alignItems="flex-end">
-            <Text style={styles.description}>Laser</Text>
-            <Text style={styles.description}>Laser</Text>
-            <Text style={styles.description}>
-              Laser Blue/Anthracite/Watermelon/White
-            </Text>
-          </View>
+          <Text style={styles.subtitle}>Category:</Text>
+            <Text style={styles.description}>{category?.name}</Text>
+        
         </View>
         <SizedBox height={16} />
         <View
@@ -141,21 +144,19 @@ function ProductDetail(props) {
           flexDirection="row"
           justifyContent="space-between"
           alignItems="flex-start">
-          <Text style={styles.subtitle}>Shown</Text>
-          <View display="flex" flexDirection="column" alignItems="flex-end">
-            <Text style={styles.description}>Laser</Text>
-          </View>
+          <Text style={styles.subtitle}>Size</Text>
+            <Text style={styles.description}>{size}</Text>
         </View>
 
         <SizedBox height={16} />
+        <Text style={styles.subtitle}>Category:</Text>
+        <SizedBox height={8} />
 
         <Text style={styles.description}>
-          The Nike Air Max 270 React ENG combines a full-length React foam
-          midsole with a 270 Max Air unit for unrivaled comfort and a striking
-          visual experience.
+          {description}
         </Text>
         <SizedBox height={16} />
-        <EButton title="Add To Cart"  onPress={addToCart}/>
+        <EButton title="Add To Cart" onPress={addToCart} />
       </View>
     </ScrollView>
   );

@@ -160,20 +160,19 @@ export default function App() {
   const isLogin = authContext?.authState?.authenticated;
   const isShop = authContext?.authState?.isShop;
   // const isShop = true;
-  console.log('authContext', authContext)
   // const isLogin = false;
-  console.log('isLogin', isLogin);
   const [status, setStatus] = useState('loading');
-
+  console.log('authContext', authContext)
   const loadJWT = useCallback(async () => {
     try {
       const value = await Keychain.getGenericPassword();
 
       const jwt = JSON.parse(value.password);
-
+      console.log('jwt', jwt)
       authContext.setAuthState({
         accessToken: jwt.accessToken || null,
         authenticated: jwt.accessToken !== null,
+        currentUser: jwt.currentUser  || null
       });
       setStatus('success');
     } catch (error) {
