@@ -84,31 +84,41 @@ function LiveStream(props) {
   }, []);
 
   const onBack = () => {
-    setStreamUrl(null);
-    navigation.goBack();
+    setStreamUrl('');
+    navigation.navigate("ShopAccount");
+    camViewRef.current.stop()
+
   };
+  console.log('camViewRef', camViewRef)
   const createStream = async () => {
     if (!streamUrl) {
       try {
         const res = await authAxios.post('streams', {
-          title: 'title',
-          description: 'desc',
+          title: title,
+          description: description,
         });
+        console.log('res.data', res.data)
         setStreamUrl(res.data.data.pushStreamUrl)
       } catch (error) {
+        console.log('error', error)
         Toast.show({description: 'Create Live stream failed'});
       }
     } else {
       onBack();
     }
   };
-  console.log('streamUrl', streamUrl)
+  useEffect(()=>{
+    if(streamUrl){
+      camViewRef.current.start()
+
+    }
+  },[])
   return (
     <View style={styles.root}>
       <NodeCameraView
         style={styles.camView}
         ref={camViewRef}
-        outputUrl={streamUrl}
+        outputUrl={streamUrl ?? ''}
         camera={{cameraId: 1, cameraFrontMirror: true}}
         audio={{bitrate: 32000, profile: 1, samplerate: 44100}}
         video={{
@@ -127,7 +137,9 @@ function LiveStream(props) {
         <Button style={styles.live} onPress={createStream}>
           {!streamUrl ? 'Live now' : 'Stop Stream'}
         </Button>
+   
       </View>
+      
     </View>
   );
 }

@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
 });
 function CreateLiveStream() {
   const navigation = useNavigation();
-  const {control, handleSubmit} = useForm({
+  const {control, handleSubmit , getValues} = useForm({
     defaultValues: {
-      email: '',
-      password: '',
+      title: '',
+      description: '',
     },
   });
 
@@ -62,8 +62,8 @@ function CreateLiveStream() {
           title="Create"
           onPress={() =>
             navigation.navigate('LiveStream', {
-              title: 'title',
-              description: 'des',
+              title: getValues("title"),
+              description: getValues("description"),
             })
           }
         />

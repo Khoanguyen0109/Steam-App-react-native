@@ -4,6 +4,7 @@ import {
   IconButton,
   Image,
   KeyboardAvoidingView,
+  Pressable,
   ScrollView,
   Text,
   Toast,
@@ -45,22 +46,23 @@ function CreateProduct() {
   const route = useRoute();
   const [image, setImage] = useState(null);
   const navigation = useNavigation();
-  const {publicAxios} = useContext(AxiosContext);
+  const {  authAxios ,publicAxios} = useContext(AxiosContext);
   const {control, handleSubmit, reset} = useForm({
     defaultValues: {
-      productName: '',
+      name: '',
       size: '',
       description: '',
-      category: '',
+      categoryId: '',
       price: 1,
       quantity: 2,
     },
   });
 
   const uploadImage = source => {
-    const data = new FormData();
-    formdata.append('files', source);
-    fetch(`${API_ENDPOINT}/media`, {
+    console.log('source', source);
+    const formdata = new FormData();
+    console.log('formdata', formdata);
+    fetch(`https://api.ntustreamhub.com/media`, {
       method: 'post',
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -68,9 +70,11 @@ function CreateProduct() {
       body: formdata,
     })
       .then(response => {
-        console.log('image uploaded');
-        const json = response.json();
-        setImage(`${IMAGE_ENDPOINT}/${json.name}`);
+        return response.json();
+      })
+      .then(data => {
+        console.log('response', data.data[0].name);
+        setImage( {uri: `${IMAGE_ENDPOINT}/${data.data[0].name}`, id:data.data[0].id });
       })
       .catch(err => {
         console.log(err);
@@ -99,104 +103,114 @@ function CreateProduct() {
         console.log('User tapped custom button: ', response.customButton);
         alert(response.customButton);
       } else {
-        const source = {uri: response.uri};
+        const image = response.assets?.[0];
+        const source = {
+          uri: image?.uri,
+          type: image?.type,
+          fileName: image.fileName,
+          name: image.fileName,
+        };
         uploadImage(source);
         // You can also display the image using data:
         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
         // alert(JSON.stringify(response));s
-        console.log('response', JSON.stringify(response));
       }
     });
   };
+  console.log('id :>> ', route?.params?.id);
 
   const createProduct = async data => {
-    if (id) {
+    if (route?.params?.id) {
       try {
-        const res = await publicAxios.put(`/products/${id}`, {
+        const res = await authAxios.put(`/products/${id}`, {
           ...data,
           price: parseInt(data.price),
-          category: parseInt(data.category.id),
+          category: parseInt(data.categoryId),
           quantity: parseInt(data.quantity),
         });
         Toast.show({description: 'Create Successfully'});
         navigation.goBack();
       } catch (error) {
+        console.log('error :>> ', error);
         Toast.show({description: 'Create Failed'});
       }
     } else {
       try {
-        const res = await publicAxios.post('/products', {
+        const res = await authAxios.post('/products', {
           ...data,
+          imageIds: [image.id]
         });
         Toast.show({description: 'Create Successfully'});
         navigation.goBack();
       } catch (error) {
+        console.log('error :>> ', error.response.data);
+
         Toast.show({description: 'Create Failed'});
       }
     }
-    try {
-      const res = await publicAxios.post('/products', {
-        ...data,
-      });
-      Toast.show({description: 'Create Successfully'});
-      navigation.goBack();
-    } catch (error) {
-      Toast.show({description: 'Create Failed'});
-    }
+   
   };
 
   const getProduct = async () => {
     try {
-      const res = await publicAxios.get(`/products/${1}`);
+      const res = await authAxios.get(`/products/${route?.params?.id}`);
       const product = res.data.data;
-      console.log('product :>> ', product.price);
+      console.log('product :>> ', product);
       reset({
         ...product,
-        productName: product.name,
+        name: product.name,
         price: product.price.toString(),
-        category: product.category.id,
+        categoryId: product.categoryId,
         quantity: product.quantity.toString(),
       });
-      // setImage(`${IMAGE_ENDPOINT}/${product.images?.[0]?.name}`);
-    } catch (error) {}
+      setImage( {uri :`${IMAGE_ENDPOINT}/${product.images?.[0]?.name}` });
+    } catch (error) {
+      console.log('error', error)
+    }
   };
 
   useEffect(() => {
-    // const {id} = route?.params;
+    if (route?.params?.id) {
+      console.log('first', route?.params?.id)
 
-    // if (id) {
-    getProduct();
-    // }
+      getProduct();
+    }
     return () => {
       reset();
     };
   }, []);
-
   return (
     <Layout>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.content}>
         <ScrollView style={styles.root}>
-          <IconButton
-            onPress={chooseImage}
-            style={styles.imageSelect}
-            icon={
-              <Icon
-                as={<MaterialIcons name="add-a-photo" />}
-                size={12}
-                color="black"
-              />
-            }
-          />
+          {!image && (
+            <IconButton
+              onPress={chooseImage}
+              style={styles.imageSelect}
+              icon={
+                <Icon
+                  as={<MaterialIcons name="add-a-photo" />}
+                  size={12}
+                  color="black"
+                />
+              }
+            />
+          )}
           {image && (
-            <Image source={{uri: image}} style={{width: 200, height: 200}} />
+            <Pressable onPress={chooseImage}>
+              <Image
+                source={image}
+                style={{width: '100%', height: 200}}
+              />
+            </Pressable>
           )}
           <SizedBox height={24} />
 
           <FormInput
             control={control}
-            name="productName"
+            name="name"
             label="Product Name"
             keyboardType="username"
             autoCompleteType="name"
@@ -207,7 +221,7 @@ function CreateProduct() {
           <FormInput
             control={control}
             type="select"
-            name="category"
+            name="categoryId"
             label="Category"
             autoCompleteType="name"
             items={categories}

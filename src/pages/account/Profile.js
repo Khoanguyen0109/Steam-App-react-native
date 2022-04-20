@@ -85,7 +85,7 @@ function Profile(props) {
       <View style={styles.root}>
         <View>
           <Row icon="person-outline" title="Name" value={name} />
-          <Row icon={'person'} title="Gender" value={GENDER[authState?.currentUser?.gender]} />
+         {! isShop && <Row icon={'person'} title="Gender" value={GENDER[authState?.currentUser?.gender]} /> }  
           <Row icon="email" title="Email" value={authState?.currentUser?.email} />
         </View>
         <EButton title="Sign out" onPress={onSignOut} />

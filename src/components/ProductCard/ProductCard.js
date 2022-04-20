@@ -68,9 +68,9 @@ function ProductCard(props) {
   const onRoute = () => {
     if (isShop) {
       navigation.navigate('CreateProduct', {name: name, id});
-    } else {
+    } else {    navigation.navigate('ProductDetail', {name: name, id});
+
     }
-    navigation.navigate('ProductDetail', {name: name, id});
   };
   return (
     <TouchableOpacity

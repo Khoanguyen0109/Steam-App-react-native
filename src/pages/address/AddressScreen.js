@@ -13,10 +13,10 @@ function AddressScreen() {
 
   const navigation = useNavigation();
   const onRemoveAddress = () => {};
-  const [selectedAddress, setSelectedAddress] = useState()
+  const [selectedAddress, setSelectedAddress] = useState();
   const [addressList, setAddressList] = useState([]);
   const {publicAxios, authAxios} = useContext(AxiosContext);
-  const [cart, setCart] = useState([])
+  const [cart, setCart] = useState([]);
   const getAddressList = async () => {
     try {
       const res = await authAxios.get('/shippingAddresses');
@@ -36,31 +36,44 @@ function AddressScreen() {
       console.log('error :>> ', error);
     }
   };
-  const removeAddress = async(id)=> {
+  const removeAddress = async id => {
     try {
-      console.log('id', id)
+      console.log('id', id);
       const res = await authAxios.delete(`/shippingAddresses/${id}`);
-      const filter = addressList.filter(item => item.id !== id)
-      console.log('addressList', addressList)
+      const filter = addressList.filter(item => item.id !== id);
+      console.log('addressList', addressList);
       setAddressList([...filter]);
     } catch (error) {
       console.log('error :>> ', error);
     }
-  }
+  };
   useEffect(() => {
     getAddressList();
-    getCart()
+    getCart();
   }, [isFocused]);
+  const onCreateOrder = async shopItem => {
+    try {
+      const items = shopItem.cartItems.map(item => item.product.id);
+      const res = await authAxios.post('/orders', {
+        shopId: shopItem?.id,
+        cartItems: items,
+        shippingAddressId: selectedAddress,
+      });
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
 
-  const onCreateOrder = async() =>{
+  const creatMultiOrder = async () => {
+    cart.forEach(shopItem => onCreateOrder(shopItem));
+  };
 
-  }
   return (
     <Layout>
       <ScrollView>
         {addressList.map(item => (
           <Address
-            onSelect={()=> setSelectedAddress(item)}
+            onSelect={() => setSelectedAddress(item)}
             selected={selectedAddress?.id === item.id}
             id={item.id}
             name={`${item.firstName} ${item.lastName}`}
@@ -71,7 +84,9 @@ function AddressScreen() {
           />
         ))}
       </ScrollView>
-     {  route.params?.fromCart && selectedAddress && <EButton title={"Create Order"} />} 
+      {route.params?.fromCart && selectedAddress && (
+        <EButton title={'Create Order'} onPress={creatMultiOrder} />
+      )}
     </Layout>
   );
 }

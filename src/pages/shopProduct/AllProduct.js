@@ -1,10 +1,13 @@
 import { useRoute } from '@react-navigation/native';
 import { Flex, ScrollView, Spacer } from 'native-base';
-import React from 'react';
 import Banner from '../../components/Banner/Banner';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import SizedBox from '../../components/SizeBox/SizeBox';
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import React, {useContext, useState, useEffect} from 'react';
+import { AxiosContext } from '../../provider/AxiosProvider';
+import { AuthContext } from '../../provider/AuthProvider';
+import { IMAGE_ENDPOINT } from '../../utils';
 
 const styles = StyleSheet.create({
   root: {
@@ -18,20 +21,40 @@ const styles = StyleSheet.create({
 function AllProduct(props) {
   const route = useRoute();
   const list = [1, 2 , 3, 4];
+  const authContext = useContext(AuthContext)
+  const {currentUser} = authContext.authState
+  const {publicAxios} = useContext(AxiosContext)
+  const [productList, setProductList] = useState([])
+  const getAllProduct = async() => {
+    try {
+      const res = await publicAxios.get('products' , {
+        params: {
+          shopId:currentUser.id
+        }
+      })
+      const data= res.data.data;
+      setProductList(data)
+    } catch (error) {
+      
+    }
+  }
+  useEffect(()=>{
+    getAllProduct()
+  },[])
+  
   return (
     <SafeAreaView style={styles.root}>
       <ScrollView>
       <Flex flexDirection='row' wrap='wrap'>
-        {list.map((item) => (
+        {productList.map((item) => (
             <ProductCard
-              key={item}
-              name='FS - Nike Air Max 270 React Native Native Native'
+              key={item.id}
+              id={item.id}
+              name={item.name}
               image={{
-                uri: 'https://static.nike.com/a/images/t_default/lvzcsilw4gmh2gi2hiq4/revolution-5-road-running-shoes-szF7CS.png',
+                uri: `${IMAGE_ENDPOINT}/${item.images[0].name}`
               }}
-              price={204}
-              discountPercent={24}
-              discountPrice={300}
+              price={item.price}
             />
         ))}
       </Flex>

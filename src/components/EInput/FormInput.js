@@ -1,6 +1,6 @@
-import { View, Text } from 'native-base';
+import {View, Text} from 'native-base';
 import React from 'react';
-import { Controller } from 'react-hook-form';
+import {Controller} from 'react-hook-form';
 import ESelect from '../ESelect/ESelect';
 import SizedBox from '../SizeBox/SizeBox';
 import EInput from './EInput';
@@ -22,14 +22,11 @@ const FormInput = ({
       control={control}
       name={name}
       rules={rules}
-      render={({
-        field: { value, onChange, onBlur },
-        fieldState: { error },
-      }) => (
+      render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
         <>
           {label && (
             <>
-              <Text color='#223263' fontSize={14} fontWeight='700'>
+              <Text color="#223263" fontSize={14} fontWeight="700">
                 {label}
               </Text>
               <SizedBox height={12} />
@@ -39,7 +36,7 @@ const FormInput = ({
             {type === 'input' && (
               <EInput
                 value={value}
-                autoCapitalize='none'
+                autoCapitalize="none"
                 autoCorrect={false}
                 onChangeText={onChange}
                 onBlur={onBlur}
@@ -51,6 +48,7 @@ const FormInput = ({
             )}
             {type === 'select' && (
               <ESelect
+              selectedValue={value}
                 onValueChange={onChange}
                 onBlur={onBlur}
                 placeholder={placeholder}
@@ -67,7 +65,7 @@ const FormInput = ({
             )}
           </View>
           {error && (
-            <Text style={{ color: 'red', alignSelf: 'stretch' }}>
+            <Text style={{color: 'red', alignSelf: 'stretch'}}>
               {error.message || 'Error'}
             </Text>
           )}

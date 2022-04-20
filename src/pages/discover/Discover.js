@@ -11,7 +11,8 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import {NodeCameraView} from 'react-native-nodemediaclient';
+import {NodePlayerView} from 'react-native-nodemediaclient';
+import SizedBox from '../../components/SizeBox/SizeBox';
 
 const styles = StyleSheet.create({
   root: {
@@ -31,31 +32,8 @@ function Discover(props) {
   const authContext = useContext(AuthContext);
   const {publicAxios, authAxios} = useContext(AxiosContext);
   const camViewRef = useRef();
+  const [streamList, setStreamList] = useState([]);
 
-  // const requestCameraPermission = async () => {
-  //   try {
-  //     const granted = await PermissionsAndroid.requestMultiple(
-  //       [PermissionsAndroid.PERMISSIONS.CAMERA],
-  //       {
-  //         title: 'Cool Photo App Camera And Microphone Permission',
-  //         message:
-  //           'Cool Photo App needs access to your camera ' +
-  //           'so you can take awesome pictures.',
-  //         buttonNeutral: 'Ask Me Later',
-  //         buttonNegative: 'Cancel',
-  //         buttonPositive: 'OK',
-  //       },
-  //     );
-  //     setPermission(true);
-  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-  //       console.log('You can use the camera');
-  //     } else {
-  //       console.log('Camera permission denied');
-  //     }
-  //   } catch (err) {
-  //     console.warn(err);
-  //   }
-  // };
   const getStream = async () => {
     try {
       const res = await authAxios.get(`/stream/${id}`);
@@ -66,68 +44,43 @@ function Discover(props) {
     }
   };
 
+  const getStreamList = async () => {
+    try {
+      const res = await publicAxios.get(`/streams?isLive=true`);
+      const data = res.data.data;
+      setStreamList(data);
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
+  };
+
   // useEffect(() => {
   //   requestCameraPermission();
   // }, []);
   useEffect(() => {
-    if (permission) {
-      getStream();
-    }
-  }, [permission]);
+    getStreamList();
+  }, []);
 
   return (
     <ScrollView snapToInterval={windowHeight - 100} style={styles.root}>
-      <View style={styles.root}>
-        <NodeCameraView
-          style={styles.camView}
-          ref={camViewRef}
-          outputUrl={streamUrl}
-          camera={{cameraId: 1, cameraFrontMirror: true}}
-          audio={{bitrate: 32000, profile: 1, samplerate: 44100}}
-          video={{
-            preset: 12,
-            bitrate: 400000,
-            profile: 1,
-            fps: 15,
-            videoFrontMirror: false,
-          }}
-          autopreview={true}
-        />
-      </View>
-      <View style={styles.root}>
-        <NodeCameraView
-          style={styles.camView}
-          ref={camViewRef}
-          outputUrl={streamUrl}
-          camera={{cameraId: 1, cameraFrontMirror: true}}
-          audio={{bitrate: 32000, profile: 1, samplerate: 44100}}
-          video={{
-            preset: 12,
-            bitrate: 400000,
-            profile: 1,
-            fps: 15,
-            videoFrontMirror: false,
-          }}
-          autopreview={true}
-        />
-      </View>
-      <View style={styles.root}>
-        <NodeCameraView
-          style={styles.camView}
-          ref={camViewRef}
-          outputUrl={streamUrl}
-          camera={{cameraId: 1, cameraFrontMirror: true}}
-          audio={{bitrate: 32000, profile: 1, samplerate: 44100}}
-          video={{
-            preset: 12,
-            bitrate: 400000,
-            profile: 1,
-            fps: 15,
-            videoFrontMirror: false,
-          }}
-          autopreview={true}
-        />
-      </View>
+      {streamList.map(item => (
+        <>
+        <View style={styles.root}>
+          <NodePlayerView
+            key={item.id}
+            style={styles.camView}
+            ref={camViewRef}
+            inputUrl={item.playStreamUrl}
+            scaleMode={'ScaleAspectFit'}
+            bufferTime={300}
+            maxBufferTime={1000}
+            autoplay={true}
+          />
+        </View>
+        <SizedBox height={20}/>
+        </>
+
+       ))}
     </ScrollView>
   );
 }

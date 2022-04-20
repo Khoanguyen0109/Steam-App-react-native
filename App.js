@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 import 'react-native-gesture-handler';
 import {useCallback, useContext, useEffect, useState} from 'react';
 
@@ -30,19 +29,19 @@ export default function App() {
   const isLogin = authContext?.authState?.authenticated;
   const isShop = authContext?.authState?.isShop;
   // const isShop = true;
-  // const isLogin = false;
+  // const isLogin = true;
   const [status, setStatus] = useState('loading');
-  console.log('authContext', authContext)
+  console.log('authContext', authContext);
   const loadJWT = useCallback(async () => {
     try {
       const value = await Keychain.getGenericPassword();
 
       const jwt = JSON.parse(value.password);
-      console.log('jwt', jwt)
+      console.log('jwt', jwt);
       authContext.setAuthState({
         accessToken: jwt.accessToken || null,
         authenticated: jwt.accessToken !== null,
-        currentUser: jwt.currentUser  || null
+        currentUser: jwt.currentUser || null,
       });
       setStatus('success');
     } catch (error) {
@@ -85,13 +84,21 @@ export default function App() {
               component={Register}
             />
           </Stack.Navigator>
+        ) : isShop ? (
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Home"
+              options={{headerShown: false}}
+              component={ShopAccountStackScreen}
+            />
+          </Stack.Navigator>
         ) : (
           <Tab.Navigator>
             <Tab.Screen
               options={{headerShown: false}}
               name="Home"
               // component={HomeStackScreen}
-              component={isShop ? ShopAccountStackScreen : HomeStackScreen}
+              component={HomeStackScreen}
             />
 
             <Tab.Screen name="Discover" component={Discover} />

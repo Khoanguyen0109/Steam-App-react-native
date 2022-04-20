@@ -80,6 +80,7 @@ function Login(props) {
   const onSubmit = (data, e) => console.log(data, e);
 
   const onLogin = async data => {
+    console.log('data', data)
     try {
       const response = await publicAxios.post('/users/login', {
         email: data.email,
@@ -99,6 +100,7 @@ function Login(props) {
         }),
       );
     } catch (error) {
+      console.log('error', error)
       Toast.show({description: 'Login Failed'});
     }
   };

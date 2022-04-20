@@ -45,12 +45,12 @@ function Category(props) {
         <Flex flexDirection="row" wrap="wrap">
           {productList.map(item => (
             <ProductCard
-              id={item.id}
-              name={item.name}
-              image={{
-                uri: 'https://static.nike.com/a/images/t_default/lvzcsilw4gmh2gi2hiq4/revolution-5-road-running-shoes-szF7CS.png',
-              }}
-              price={item.price}
+            id={item.id}
+            name={item.name}
+            image={{
+              uri: `${IMAGE_ENDPOINT}/${item.images[0].name}`
+            }}
+            price={item.price}
               // discountPercent={24}
               // discountPrice={300}
             />
