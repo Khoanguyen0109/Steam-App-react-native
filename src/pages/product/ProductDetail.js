@@ -117,7 +117,7 @@ function ProductDetail(props) {
       <View style={styles.container}>
         <Text style={styles.name}>{name}</Text>
         <SizedBox height={16} />
-        <Text style={styles.price}> {price}</Text>
+        <Text style={styles.price}> ${price}</Text>
         <SizedBox height={16} />
         <View display="flex" flexDirection="row" alignItems="center">
           {/* <Avatar source={shop.image} /> */}

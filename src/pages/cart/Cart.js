@@ -1,5 +1,5 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import {Text, View} from 'native-base';
+import {Center, Text, View} from 'native-base';
 import React, {useContext, useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -37,7 +37,14 @@ function Cart(props) {
   const [cartList, setCartList] = useState([]);
   const [cart, setCart] = useState([]);
   const {publicAxios, authAxios} = useContext(AxiosContext);
-  const onRemoveProduct = () => {};
+  const onRemoveProduct = async(cartItemId) => {
+    try {
+      const res = await authAxios.delete(`carts/${cartItemId}`)  
+      getCart()
+    } catch (error) {
+      
+    }
+  };
 
   const getCart = async () => {
     try {
@@ -70,10 +77,10 @@ function Cart(props) {
       const res = await authAxios.put(`carts/${cartItem.id}`, {
         quantity: quantity
       })
-      if(quantity ===0 ){
+      // if(quantity ===0 ){
         getCart();
 
-      }
+      // }
     } catch (error) {
       
     }
@@ -96,7 +103,7 @@ function Cart(props) {
           onRemoveProduct={onRemoveProduct}
         />
       ))}
-      {cartList.length > 0 && (
+      {cartList.length > 0 ? (
         <>
           <SizedBox height={32} />
           <View style={styles.summary}>
@@ -126,7 +133,11 @@ function Cart(props) {
             onPress={() => navigation.navigate('ShipTo', {fromCart: true})}
           />
         </>
-      )}
+      ) : <Center>
+          <Text>
+              Cart is Empty
+          </Text>
+        </Center>}
     </ScrollView>
   );
 }

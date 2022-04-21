@@ -28,10 +28,11 @@ const styles = StyleSheet.create({
  
   },
   image: {
-    width: 72,
+    width: '100%',
     height: 72,
     flex: 1,
     resizeMode: 'contain',
+    backgroundColor: 'white'
   },
   content: {
     flex: 2,
@@ -67,11 +68,16 @@ function ProductRow(props) {
     setQuantity(quantity+1);
   };
   const onRemove = () => {
-    if (quantity <= 1) {
-      return onRemoveProduct();
-    }
+
+ 
     return setQuantity(quantity -1);
   };
+
+  useEffect(()=>{
+    if (quantity === 0) {
+      onRemoveProduct(cartItemId);
+    }
+  },[quantity])
 
   useEffect(() => {
     
@@ -96,7 +102,7 @@ function ProductRow(props) {
 
       <View style={styles.action}>
       <IconButton
-        onPress={onRemove}
+        onPress={() => onRemoveProduct(cartItemId)}
         icon={
           <Icon
             as={<MaterialIcons name='delete-outline' />}

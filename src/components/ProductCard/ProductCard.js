@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     width: 165,
+    height: 215,
     borderRadius: 6,
     borderWidth: 2,
     borderColor: '#E5E5E5',
@@ -35,6 +36,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
+    backgroundColor: 'white'
   },
   container: {
     flex: 1,
