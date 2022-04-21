@@ -1,5 +1,5 @@
 import {Icon, IconButton, Text, View} from 'native-base';
-import React, {useContext , useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import Layout from '../../layout/Layout';
 import Row from './components/Row';
 import {StyleSheet, SafeAreaView} from 'react-native';
@@ -10,7 +10,7 @@ import SizedBox from '../../components/SizeBox/SizeBox';
 import {AuthContext} from '../../provider/AuthProvider';
 import {useIsFocused} from '@react-navigation/native';
 import {AxiosContext} from '../../provider/AxiosProvider';
-
+import AccountDefail from '../../../assets/icons/defaultImg.svg';
 const styles = StyleSheet.create({
   root: {
     height: '80%',
@@ -29,11 +29,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   uploadButton: {
-    backgroundColor: '#E8005A',
-    color: 'white',
     height: 72,
     width: 72,
     borderRadius: 72 / 2,
+    backgroundColor: 'gray'
   },
   name: {
     fontSize: 14,
@@ -50,7 +49,7 @@ function Profile(props) {
   const renderGender = () => {};
   const isShop = authState.isShop;
   const url = isShop ? '/shops/me' : '/users/me';
-  console.log('first', authState?.currentUser?.gender)
+  console.log('first', authState?.currentUser?.gender);
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     // let result = await ImagePicker.launchImageLibraryAsync({
@@ -85,9 +84,11 @@ function Profile(props) {
   return (
     <SafeAreaView>
       <View style={styles.info}>
-        <IconButton
+        <View style={styles.uploadButton}>
+          {/* <AccountDefail size={30} /> */}
+        </View>
+        {/* <IconButton
           onPress={pickImage}
-          style={styles.uploadButton}
           icon={
             <Icon
               as={<MaterialIcons name="add-a-photo" />}
@@ -95,7 +96,7 @@ function Profile(props) {
               color="white"
             />
           }
-        />
+        /> */}
         <SizedBox width={12} />
         <Text style={styles.name}>{name}</Text>
       </View>
@@ -115,7 +116,6 @@ function Profile(props) {
               title="Gender"
               value={GENDER[authState?.currentUser?.gender]}
               screen={'Gender'}
-
             />
           )}
           <Row

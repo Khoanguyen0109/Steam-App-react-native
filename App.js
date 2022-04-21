@@ -21,7 +21,11 @@ import {AuthContext, AuthProvider} from './src/provider/AuthProvider';
 import {AxiosProvider} from './src/provider/AxiosProvider';
 import ShopLogin from './src/pages/auth/ShopLogin';
 import * as Keychain from 'react-native-keychain';
+import HomeIcon from './assets/icons/home.svg'
 
+import DiscoverIcon from './assets/icons/discover.svg'
+import CartIcon from './assets/icons/cart.svg'
+import AccountIcon from './assets/icons/account.svg'
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 export default function App() {
@@ -96,7 +100,12 @@ export default function App() {
         ) : (
           <Tab.Navigator>
             <Tab.Screen
-              options={{headerShown: false}}
+              options={{
+                headerShown: false,
+                tabBarIcon: ({color, size}) => (
+                  <HomeIcon name="home" color={color} size={size} />
+                ),
+              }}
               name="Home"
               // component={HomeStackScreen}
               component={HomeStackScreen}
@@ -104,19 +113,31 @@ export default function App() {
 
             <Tab.Screen
               name="Discover"
-              options={{headerShown: false}}
+              options={{headerShown: false ,
+                tabBarIcon: ({color, size}) => (
+                  <DiscoverIcon name="discover" color={color} size={size} />
+                ),
+              }}
               component={Discover}
             />
             <Tab.Screen
               name="Cart"
-              options={{headerShown: false}}
+              options={{headerShown: false,
+                tabBarIcon: ({color, size}) => (
+                  <CartIcon name="discover" color={color} size={size} />
+                ),
+              }}
               component={CartStackScreen}
             />
 
             <Tab.Screen
               name="Account"
               component={AccountStackScreen}
-              options={{headerShown: false}}
+              options={{headerShown: false , 
+                tabBarIcon: ({color, size}) => (
+                  <AccountIcon name="discover" color={color} size={size} />
+                ),
+              }}
             />
           </Tab.Navigator>
         )}

@@ -17,12 +17,22 @@ import SizedBox from '../../components/SizeBox/SizeBox';
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    position: 'relative',
     // flexGrow: 1,
     height: 700,
   },
   camView: {
     height: 700,
     flexGrow: 1,
+  },
+  boxtitle: {
+    position: 'absolute',
+    top: 15,
+    left: 15,
+  },
+  title: {
+    color: 'white',
+    fontSize: 15,
   },
 });
 
@@ -49,7 +59,7 @@ function Discover(props) {
     try {
       const res = await publicAxios.get(`/streams?isLive=true`);
       const data = res.data.data;
-      console.log('data', data)
+      console.log('data', data);
       setStreamList(data);
     } catch (error) {
       console.log('error :>> ', error);
@@ -67,22 +77,26 @@ function Discover(props) {
     <ScrollView snapToInterval={windowHeight - 100} style={styles.root}>
       {streamList.map(item => (
         <>
-        <View style={styles.root}>
-          <NodePlayerView
-            key={item.id}
-            style={styles.camView}
-            ref={camViewRef}
-            inputUrl={item.playStreamUrl}
-            scaleMode={'ScaleAspectFill'}
-            bufferTime={300}
-            maxBufferTime={1000}
-            autoplay={true}
-          />
-        </View>
-        <SizedBox height={20}/>
-        </>
+          <View style={styles.root}>
+            <View style={styles.boxtitle}>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.title}>{item.title}</Text>
+            </View>
 
-       ))}
+            <NodePlayerView
+              key={item.id}
+              style={styles.camView}
+              ref={camViewRef}
+              inputUrl={item.playStreamUrl}
+              scaleMode={'ScaleAspectFill'}
+              bufferTime={300}
+              maxBufferTime={1000}
+              autoplay={true}
+            />
+          </View>
+          <SizedBox height={20} />
+        </>
+      ))}
     </ScrollView>
   );
 }

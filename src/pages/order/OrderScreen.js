@@ -13,7 +13,7 @@ function OrderScreen(props) {
   const navigation = useNavigation();
   const authContext = useContext(AuthContext);
   const isShop = authContext?.authState?.isShop;
-  const url = isShop ? 'orders/users?status=1' : 'orders/users?status=1';
+  const url = isShop ? 'orders/shops?status=1' : 'orders/users?status=1';
   const [orders, setOrders] = useState([]);
   const {publicAxios, authAxios} = useContext(AxiosContext);
   const getOrderList = async () => {
