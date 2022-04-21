@@ -62,6 +62,7 @@ function CreateProduct() {
     console.log('source', source);
     const formdata = new FormData();
     console.log('formdata', formdata);
+    formdata.append("files", source)
     fetch(`https://api.ntustreamhub.com/media`, {
       method: 'post',
       headers: {
