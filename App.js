@@ -26,7 +26,8 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 export default function App() {
   const authContext = useContext(AuthContext);
-  const isLogin = authContext?.authState?.authenticated && authContext.authState.currentUser ;
+  const isLogin =
+    authContext?.authState?.authenticated && authContext.authState.currentUser;
   const isShop = authContext?.authState?.isShop;
   // const isShop = true;
   // const isLogin = true;
@@ -101,7 +102,11 @@ export default function App() {
               component={HomeStackScreen}
             />
 
-            <Tab.Screen name="Discover" component={Discover} />
+            <Tab.Screen
+              name="Discover"
+              options={{headerShown: false}}
+              component={Discover}
+            />
             <Tab.Screen
               name="Cart"
               options={{headerShown: false}}

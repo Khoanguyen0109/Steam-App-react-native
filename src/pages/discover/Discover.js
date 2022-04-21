@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     height: 700,
   },
   camView: {
+    height: 700,
     flexGrow: 1,
   },
 });
@@ -72,7 +73,7 @@ function Discover(props) {
             style={styles.camView}
             ref={camViewRef}
             inputUrl={item.playStreamUrl}
-            scaleMode={'ScaleAspectFit'}
+            scaleMode={'ScaleAspectFill'}
             bufferTime={300}
             maxBufferTime={1000}
             autoplay={true}
