@@ -109,10 +109,11 @@ function LiveStream(props) {
   };
   useEffect(()=>{
     if(streamUrl){
+      console.log('streamUrl', streamUrl)
       camViewRef.current.start()
 
     }
-  },[])
+  },[streamUrl])
   return (
     <View style={styles.root}>
       <NodeCameraView
@@ -137,7 +138,9 @@ function LiveStream(props) {
         <Button style={styles.live} onPress={createStream}>
           {!streamUrl ? 'Live now' : 'Stop Stream'}
         </Button>
-   
+        {/* <Button style={styles.live} onPress={()=> camViewRef.current.start()}>
+          Publish
+        </Button> */}
       </View>
       
     </View>

@@ -1,5 +1,5 @@
 import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
-import {ScrollView, View} from 'native-base';
+import {ScrollView, Toast, View} from 'native-base';
 import React, {useContext, useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import EButton from '../../components/EButton/Ebutton';
@@ -52,19 +52,24 @@ function AddressScreen() {
     getCart();
   }, [isFocused]);
   const onCreateOrder = async shopItem => {
+    console.log('shopItem', shopItem.cartItems.map(item => item.id))
+    console.log('selectedAddress', selectedAddress.id)
     try {
-      const items = shopItem.cartItems.map(item => item.product.id);
+      const items = shopItem.cartItems.map(item => item.id);
       const res = await authAxios.post('/orders', {
         shopId: shopItem?.id,
-        cartItems: items,
-        shippingAddressId: selectedAddress,
+        cartItemId: items,
+        shippingAddressId: selectedAddress.id,
       });
+      Toast.show({description: "Create Order Successfully"})
+      navigation.navigate("Order")
     } catch (error) {
-      console.log('error', error);
+      console.log('error', error.response.data);
     }
   };
 
   const creatMultiOrder = async () => {
+    console.log('cart :>> ', cart);
     cart.forEach(shopItem => onCreateOrder(shopItem));
   };
 

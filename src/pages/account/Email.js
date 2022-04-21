@@ -1,18 +1,43 @@
-import { Text, View } from 'native-base';
-import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { Text, Toast, View } from 'native-base';
+import React, {useContext, useState, useEffect} from 'react';
 import { useForm } from 'react-hook-form';
 import EButton from '../../components/EButton/Ebutton';
 import FormInput from '../../components/EInput/FormInput';
 import SizedBox from '../../components/SizeBox/SizeBox';
 import Layout from '../../layout/Layout';
+import { AuthContext } from '../../provider/AuthProvider';
+import { AxiosContext } from '../../provider/AxiosProvider';
 
 function Email() {
+  const authContext = useContext(AuthContext)
+  const {authAxios} = useContext(AxiosContext)
+  const {currentUser} = authContext.authState
+  const isShop = authContext?.authState?.isShop;
+ const navigation = useNavigation()
+  const url = !isShop
+  ? 'users'
+  : 'shops'
   const { control, handleSubmit } = useForm({
     defaultValues: {
-      email: '',
-      password: '',
+      email: currentUser.email,
     },
   });
+
+  const updateProfile = async (data) => {
+    try {
+      const res = await  authAxios.put(url , {
+        ...data
+      })
+      navigation.goBack();
+      Toast.show({description: "Update Successfully"})
+    } catch (error) {
+        console.log('error', error)
+        Toast.show({description: "Update Failed"})
+    }
+  
+
+  }
 
   return (
     <View
@@ -36,7 +61,7 @@ function Email() {
         />
         <SizedBox height={24} />
       </View>
-      <EButton title='Save' />
+      <EButton title='Save' onPress={handleSubmit(updateProfile)} />
     </View>
   );
 }

@@ -15,93 +15,90 @@ import Skirt from '../../../assets/icons/skirt.svg';
 
 const height = 30;
 const width = 30;
-export const CATEGORY ={
-  SHIRT: 1,
-  BIKINI: 2
-}
+
 
 export const categories = [
   {
     id: 1,
     label: 'Shirt',
     icon: () => <ShirtIcon height={height} width={width} />,
-    value: CATEGORY.SHIRT
+    value: 1
   },
   {
     id: 2,
     label: 'Bikini',
     icon: () => <BikiniIcon height={height} width={width} />,
-    value: CATEGORY.BIKINI
+    value: 2
 
   },
   {
     id: 3,
     label: 'Dress',
     icon: () => <Dress height={height} width={width} />,
-    value: CATEGORY.BIKINI
+    value: 3
 
   },
   {
     id: 4,
     label: 'Man Pants',
     icon: () => <ManPants height={height} width={width} />,
-    value: CATEGORY.BIKINI
+    value: 4
 
   },
   {
     id: 5,
     label: 'Man Shoes',
     icon: () => <ManShoes height={height} width={width} />,
-    value: CATEGORY.BIKINI
+    value: 5
 
   },
   {
     id: 6,
     label: 'Man Underwear',
     icon: () => <ManUnderwear height={height} width={width} />,
-    value: CATEGORY.BIKINI
+    value: 6
 
   },
   {
     id: 7,
     label: 'Man T-shirt',
     icon: () => <TShirt height={height} width={width} />,
-    value: CATEGORY.BIKINI
+    value: 7
 
   },
   {
     id: 8,
     label: 'Woman Bag',
     icon: () => <WomanBag height={height} width={width} />,
-    value: CATEGORY.BIKINI
+    value: 8
 
   },
   {
     id: 9,
     label: 'Woman Pants',
     icon: () => <WomanPants height={height} width={width} />,
-    value: CATEGORY.BIKINI
+    value: 9
 
   },
   { 
     id:10,
     label: 'High Heel',
     icon: () => <WomanShoes height={height} width={width} />,
-    value: CATEGORY.BIKINI
+    value: 10
 
   },
   {
     id: 11,
     label: 'Woman T-Shirt',
     icon: () => <WomanShoes height={height} width={width} />,
-    value: CATEGORY.BIKINI
+    value: 11
 
   },
   {
     id: 12,
     label: 'Skirt',
     icon: () => <Skirt height={height} width={width} />,
-    value: CATEGORY.BIKINI
+    value: 12
 
   },
 ];

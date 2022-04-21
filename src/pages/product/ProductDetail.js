@@ -69,7 +69,7 @@ function ProductDetail(props) {
 
   const getProductDetail = async () => {
     try {
-      const res = await publicAxios.get(`/products/${1}`);
+      const res = await publicAxios.get(`/products/${route.params?.id}`);
       console.log('res.data', res.data);
       const data = res.data.data;
       setProductDetail({

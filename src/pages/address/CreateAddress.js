@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   content: {
-    height: 700,
+    height: 500,
   },
 });
 function CreateAddress() {

@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {Text, View} from 'native-base';
 import React, {useContext, useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
 function Cart(props) {
   const navigation = useNavigation();
   // const cartList = [1, 2];
+  const isFocused = useIsFocused();
   const [cartList, setCartList] = useState([]);
   const [cart, setCart] = useState([]);
   const {publicAxios, authAxios} = useContext(AxiosContext);
@@ -45,9 +46,9 @@ function Cart(props) {
       setCart(data);
       const cartList = [];
       data.map(cartShop => {
-        cartShop.cartItems.map(item =>{
-          cartList.push(item)
-        })
+        cartShop.cartItems.map(item => {
+          cartList.push(item);
+        });
         // cartList.push(cartShop.cartItems);
       });
       setCartList(cartList);
@@ -57,52 +58,75 @@ function Cart(props) {
   };
   useEffect(() => {
     getCart();
-  }, []);
+  }, [isFocused]);
   const totalItem = cartList.reduce(function (acc, obj) {
-    console.log('acc', obj)
-    return acc + (obj?.quantity * obj?.product.price );
-  } , 0);
-  console.log('object', totalItem)
+    console.log('acc', obj);
+    return acc + obj?.quantity * obj?.product.price;
+  }, 0);
+
+  const updateCartItem = async(cartItem , quantity) => {
+    console.log('cartItem :>> ', cartItem);
+    try {
+      const res = await authAxios.put(`carts/${cartItem.id}`, {
+        quantity: quantity
+      })
+      if(quantity ===0 ){
+        getCart();
+
+      }
+    } catch (error) {
+      
+    }
+  }
+
+  const updateCart = () => {};
   return (
     <ScrollView style={styles.root}>
       {cartList.map(item => (
         <ProductRow
+          key={item.id}
+          cartItemId={item.id}
           name={item?.product?.name}
           image={{
             uri: `${IMAGE_ENDPOINT}/${item?.product?.images?.[0].name}`,
           }}
           price={item?.product?.price}
           quantity={item.quantity}
+          updateCartItem={updateCartItem}
           onRemoveProduct={onRemoveProduct}
         />
       ))}
-      <SizedBox height={32} />
-      <View style={styles.summary}>
-        <View style={styles.summaryItem}>
-          <Text fontSize={12}>Items ({`${cartList.length}`})</Text>
-          <Text fontSize={12}>${totalItem}</Text>
-        </View>
-        <SizedBox height={12} />
-        <View style={styles.summaryItem}>
-          <Text fontSize={12}>Shipping</Text>
-          <Text fontSize={12}> Free</Text>
-        </View>
-        <SizedBox height={12} />
-        <View style={styles.summaryItem}>
-          <Text fontSize={12} fontWeight="700" color="#223263">
-            Total
-          </Text>
-          <Text fontSize={12} fontWeight="700" color="#006FBF">
-            {' '}
-            ${totalItem}
-          </Text>
-        </View>
-      </View>
-      <SizedBox height={16} />
-      <EButton
-        title="Check out"
-        onPress={() => navigation.navigate('ShipTo' , {fromCart: true})}
-      />
+      {cartList.length > 0 && (
+        <>
+          <SizedBox height={32} />
+          <View style={styles.summary}>
+            <View style={styles.summaryItem}>
+              <Text fontSize={12}>Items ({`${cartList.length}`})</Text>
+              <Text fontSize={12}>${totalItem}</Text>
+            </View>
+            <SizedBox height={12} />
+            <View style={styles.summaryItem}>
+              <Text fontSize={12}>Shipping</Text>
+              <Text fontSize={12}> Free</Text>
+            </View>
+            <SizedBox height={12} />
+            <View style={styles.summaryItem}>
+              <Text fontSize={12} fontWeight="700" color="#223263">
+                Total
+              </Text>
+              <Text fontSize={12} fontWeight="700" color="#006FBF">
+                {' '}
+                ${totalItem}
+              </Text>
+            </View>
+          </View>
+          <SizedBox height={16} />
+          <EButton
+            title="Check out"
+            onPress={() => navigation.navigate('ShipTo', {fromCart: true})}
+          />
+        </>
+      )}
     </ScrollView>
   );
 }

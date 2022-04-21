@@ -26,7 +26,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 export default function App() {
   const authContext = useContext(AuthContext);
-  const isLogin = authContext?.authState?.authenticated;
+  const isLogin = authContext?.authState?.authenticated && authContext.authState.currentUser ;
   const isShop = authContext?.authState?.isShop;
   // const isShop = true;
   // const isLogin = true;

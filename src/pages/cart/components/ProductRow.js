@@ -1,5 +1,5 @@
 import { IconButton, Image, Text, View , Icon } from 'native-base';
-import React  , {useState} from 'react';
+import React  , {useState , useEffect} from 'react';
 import { StyleSheet } from 'react-native';
 import { borderColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 import SizedBox from '../../../components/SizeBox/SizeBox';
@@ -60,18 +60,23 @@ const styles = StyleSheet.create({
   },
 });
 function ProductRow(props) {
-  const { product, onRemoveProduct , name , price , image  } = props;
+  const { product, onRemoveProduct , updateCartItem, cartItemId, name , price , image  } = props;
   const [quantity, setQuantity] = useState(props.quantity);
   const onAdd = () => {
     // if(quantity  ){
-    setQuantity(quantity++);
+    setQuantity(quantity+1);
   };
   const onRemove = () => {
     if (quantity <= 1) {
       return onRemoveProduct();
     }
-    return setQuantity(quantity--);
+    return setQuantity(quantity -1);
   };
+
+  useEffect(() => {
+    
+    updateCartItem(cartItemId, quantity)
+  }, [quantity])
   return (
     <View style={styles.root}>
       <View style={styles.imageContainer}>

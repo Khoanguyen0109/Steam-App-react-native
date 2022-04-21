@@ -1,5 +1,5 @@
 import {Icon, IconButton, Text, View} from 'native-base';
-import React, {useContext} from 'react';
+import React, {useContext , useEffect} from 'react';
 import Layout from '../../layout/Layout';
 import Row from './components/Row';
 import {StyleSheet, SafeAreaView} from 'react-native';
@@ -8,6 +8,8 @@ import EButton from '../../components/EButton/Ebutton';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SizedBox from '../../components/SizeBox/SizeBox';
 import {AuthContext} from '../../provider/AuthProvider';
+import {useIsFocused} from '@react-navigation/native';
+import {AxiosContext} from '../../provider/AxiosProvider';
 
 const styles = StyleSheet.create({
   root: {
@@ -41,11 +43,14 @@ const styles = StyleSheet.create({
 });
 
 function Profile(props) {
-
+  const isFoucsed = useIsFocused();
   const authContext = useContext(AuthContext);
-  const {authState } = authContext
+  const {authAxios} = useContext(AxiosContext);
+  const {authState} = authContext;
   const renderGender = () => {};
   const isShop = authState.isShop;
+  const url = isShop ? '/shops/me' : '/users/me';
+  console.log('first', authState?.currentUser?.gender)
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     // let result = await ImagePicker.launchImageLibraryAsync({
@@ -59,10 +64,24 @@ function Profile(props) {
     //   setImage(result.uri);
     // }
   };
-  const onSignOut = () =>{
-    authContext.logout()
-  }
-  const name = `${authState?.currentUser?.firstName} ${authState?.currentUser?.lastName} `
+  const getUser = async () => {
+    try {
+      const res = await authAxios.get(url);
+      const data = res.data.data;
+      authContext.setAuthState({
+        ...authContext.authState,
+        currentUser: data || null,
+      });
+      console.log('data', data);
+    } catch (error) {}
+  };
+  useEffect(() => {
+    getUser();
+  }, [isFoucsed]);
+  const onSignOut = () => {
+    authContext.logout();
+  };
+  const name = `${authState?.currentUser?.firstName} ${authState?.currentUser?.lastName} `;
   return (
     <SafeAreaView>
       <View style={styles.info}>
@@ -84,9 +103,27 @@ function Profile(props) {
 
       <View style={styles.root}>
         <View>
-          <Row icon="person-outline" title="Name" value={name} />
-         {! isShop && <Row icon={'person'} title="Gender" value={GENDER[authState?.currentUser?.gender]} /> }  
-          <Row icon="email" title="Email" value={authState?.currentUser?.email} />
+          <Row
+            icon="person-outline"
+            title="Name"
+            value={name}
+            screen={'Name'}
+          />
+          {!isShop && (
+            <Row
+              icon={'person'}
+              title="Gender"
+              value={GENDER[authState?.currentUser?.gender]}
+              screen={'Gender'}
+
+            />
+          )}
+          <Row
+            icon="email"
+            title="Email"
+            value={authState?.currentUser?.email}
+            screen="Email"
+          />
         </View>
         <EButton title="Sign out" onPress={onSignOut} />
       </View>

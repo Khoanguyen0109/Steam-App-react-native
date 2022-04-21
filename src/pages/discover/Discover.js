@@ -48,6 +48,7 @@ function Discover(props) {
     try {
       const res = await publicAxios.get(`/streams?isLive=true`);
       const data = res.data.data;
+      console.log('data', data)
       setStreamList(data);
     } catch (error) {
       console.log('error :>> ', error);

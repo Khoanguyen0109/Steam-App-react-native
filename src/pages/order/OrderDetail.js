@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import Layout from '../../layout/Layout';
-import { StyleSheet } from 'react-native';
-import { Text, View } from 'native-base';
-import { useRoute } from '@react-navigation/native';
+import {StyleSheet} from 'react-native';
+import {Text, View} from 'native-base';
+import {useRoute} from '@react-navigation/native';
 import ProductOrderRow from './components/ProductOrderRow';
 import SizedBox from '../../components/SizeBox/SizeBox';
 import Address from '../address/Address';
 import PaymentDetail from './components/PaymentDetail';
+import {AxiosContext} from '../../provider/AxiosProvider';
+import {AuthContext} from '../../provider/AuthProvider';
+import {IMAGE_ENDPOINT} from '../../utils';
 const styles = StyleSheet.create({
   root: {
     backgroundColor: 'white',
@@ -23,25 +26,53 @@ const styles = StyleSheet.create({
 });
 function OrderDetail(props) {
   const route = useRoute();
-  const orderDetail = {
-    items: [{}, {}],
-    delivery: {},
-    paymentDetail: {},
+  // const orderDetail = {
+  //   items: [{}, {}],
+  //   delivery: {},
+  //   paymentDetail: {},
+  // };
+  const authContext = useContext(AuthContext);
+  const isShop = authContext?.authState?.isShop;
+  const {publicAxios, authAxios} = useContext(AxiosContext);
+  const url = !isShop
+    ? `/orders/${route.params?.id}/users`
+    : `orders/${route.params?.id}/shop`;
+
+  const [orderDetail, setOrderDetail] = useState({});
+  const address  = orderDetail?.shippingAddress ?? {};
+  const getOrderDetail = async () => {
+    try {
+      const res = await authAxios.get(url);
+      console.log('res.data.data', res.data.data);
+      console.log('res :>> ', res);
+      const data = res.data.data;
+      console.log('data[0]', data[0]);
+      setOrderDetail(data);
+    } catch (error) {
+      console.log('error', error);
+    }
   };
-  const { items } = orderDetail;
+  useEffect(() => {
+    getOrderDetail();
+  }, []);
+  const totalItem = orderDetail?.products?.reduce(function (acc, obj) {
+    return acc + obj?.order_products.price;
+  }, 0);
+
   return (
     <Layout>
       <View>
         <Text style={styles.title}>Products</Text>
         <SizedBox height={12} />
-        {items.map((item) => (
+        {orderDetail?.products?.map(item => (
           <ProductOrderRow
-            name='FS - Nike Air Max 270 React Native Native Native'
+            id={item.id}
+            name={item.name}
             image={{
-              uri: 'https://static.nike.com/a/images/t_default/lvzcsilw4gmh2gi2hiq4/revolution-5-road-running-shoes-szF7CS.png',
+              uri: `${IMAGE_ENDPOINT}/${item.images[0].name}`,
             }}
-            price={204}
-            quantity={2}
+            price={item.price}
+            quantity={item.order_products.quantity}
           />
         ))}
       </View>
@@ -49,14 +80,18 @@ function OrderDetail(props) {
       <View>
         <Text style={styles.title}>Delivery Address</Text>
         <SizedBox height={12} />
-        <Address name='' description='' phone='121212' />
+        <Address
+          id={address.id}
+          name={`${address.firstName} ${address.lastName}`}
+          description={`${address.streetAddress}, ${address?.detailAddress}, ${address.city}, ${address.state} , ${address.country} `}
+          phone={address.phoneNumber}
+        />
       </View>
+
       <View>
-        <Text style={styles.title}>Delivery Address</Text>
+        <Text style={styles.title}>Payment Details</Text>
         <SizedBox height={12} />
-        <PaymentDetail 
-        price={12121}
-        / >
+        <PaymentDetail price={totalItem} />
       </View>
     </Layout>
   );
