@@ -36,7 +36,7 @@ function OrderDetail(props) {
   const {publicAxios, authAxios} = useContext(AxiosContext);
   const url = !isShop
     ? `/orders/${route.params?.id}/users`
-    : `orders/${route.params?.id}/shop`;
+    : `orders/${route.params?.id}/shops`;
 
   const [orderDetail, setOrderDetail] = useState({});
   const address  = orderDetail?.shippingAddress ?? {};
@@ -93,6 +93,8 @@ function OrderDetail(props) {
         <SizedBox height={12} />
         <PaymentDetail price={totalItem} />
       </View>
+      <SizedBox height={50} />
+
     </Layout>
   );
 }

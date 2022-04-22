@@ -1,5 +1,5 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {Button, Toast, View} from 'native-base';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
+import {Button, Input, Toast, View} from 'native-base';
 import React, {useRef, useEffect, useContext, useState} from 'react';
 import {PermissionsAndroid, StyleSheet} from 'react-native';
 import {NodeCameraView} from 'react-native-nodemediaclient';
@@ -7,6 +7,9 @@ import EButton from '../../components/EButton/Ebutton';
 import SizedBox from '../../components/SizeBox/SizeBox';
 import {AuthContext} from '../../provider/AuthProvider';
 import {AxiosContext} from '../../provider/AxiosProvider';
+import CommentView from './CommentView';
+import {io} from 'socket.io-client';
+import { cloneDeep } from 'lodash';
 
 const styles = StyleSheet.create({
   root: {
@@ -43,15 +46,69 @@ const styles = StyleSheet.create({
     width: 165,
     height: 40,
   },
+  inputbox: {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'row',
+    bottom: 80,
+    padding: 16,
+    width: '100%',
+    backgroundColor: 'transparent',
+  },
+  commentView: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    bottom: 200,
+    width: '100%',
+
+  },
 });
 function LiveStream(props) {
+  const isFocues = useIsFocused();
+
   const route = useRoute();
   const {title, description} = route.params;
   const navigation = useNavigation();
   const camViewRef = useRef();
   const {publicAxios, authAxios} = useContext(AxiosContext);
   const authContext = useContext(AuthContext);
+  const {currentUser} = authContext.authState;
+
   const [streamUrl, setStreamUrl] = useState();
+  const [messages, setMessages] = useState([]);
+  const [chatMessage, setChatMessage] = useState('');
+  const socketRef = useRef();
+  const initSocket = () => {
+    try {
+      socketRef.current = io('https://api.ntustreamhub.com', {
+        auth: {
+          streamId: props.id,
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+        },
+      });
+      //   console.log('socket :>> ', socket);
+      console.log(`Connecting socket...`);
+
+      socketRef.current.on('chat message', msg => {
+        console.log('msg', msg);
+        setMessages(cloneDeep([...messages, msg]));
+      });
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+  console.log('messages.length', messages.length)
+  const submitChatMessage = () => {
+    socketRef.current.emit('chat message', chatMessage);
+    setChatMessage('');
+  };
+  useEffect(() => {
+    initSocket();
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, [isFocues]);
   const requestCameraPermission = async () => {
     try {
       const granted = await PermissionsAndroid.requestMultiple(
@@ -85,11 +142,9 @@ function LiveStream(props) {
 
   const onBack = () => {
     setStreamUrl('');
-    navigation.navigate("ShopAccount");
-    camViewRef.current.stop()
-
+    navigation.navigate('ShopAccount');
+    camViewRef.current.stop();
   };
-  console.log('camViewRef', camViewRef)
   const createStream = async () => {
     if (!streamUrl) {
       try {
@@ -97,23 +152,20 @@ function LiveStream(props) {
           title: title,
           description: description,
         });
-        console.log('res.data', res.data)
-        setStreamUrl(res.data.data.pushStreamUrl)
+        setStreamUrl(res.data.data.pushStreamUrl);
       } catch (error) {
-        console.log('error', error)
         Toast.show({description: 'Create Live stream failed'});
       }
     } else {
       onBack();
     }
   };
-  useEffect(()=>{
-    if(streamUrl){
-      console.log('streamUrl', streamUrl)
-      camViewRef.current.start()
-
+  useEffect(() => {
+    if (streamUrl) {
+      console.log('streamUrl', streamUrl);
+      camViewRef.current.start();
     }
-  },[streamUrl])
+  }, [streamUrl]);
   return (
     <View style={styles.root}>
       <NodeCameraView
@@ -131,6 +183,23 @@ function LiveStream(props) {
         }}
         autopreview={true}
       />
+      <View style={styles.commentView}>
+        <CommentView messages={messages} />
+      </View>
+
+      <View style={styles.inputbox}>
+        <View width={250}>
+          <Input
+            style={styles.input}
+            value={chatMessage}
+            placeholder="Add Comment"
+            onChangeText={setChatMessage}
+          />
+        </View>
+
+        <SizedBox width={12} />
+        <Button onPress={submitChatMessage}>Send</Button>
+      </View>
       <View style={styles.buttonGroup}>
         <Button style={styles.backButton} onPress={() => navigation.goBack()}>
           Back
@@ -142,7 +211,6 @@ function LiveStream(props) {
           Publish
         </Button> */}
       </View>
-      
     </View>
   );
 }

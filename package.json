@@ -42,6 +42,7 @@
     "redux": "^4.1.2",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
+    "socket.io-client": "^4.4.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -59,7 +60,7 @@
   },
   "overrides": {
     "react-native": {
-        "react-devtools-core": "4.14.0"
+      "react-devtools-core": "4.14.0"
     }
-}
+  }
 }
