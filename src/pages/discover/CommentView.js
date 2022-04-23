@@ -50,7 +50,7 @@ function CommentView(props) {
           <Text style={styles.name}>
             {msg.firstName} {msg.lastName}:{' '}
           </Text>
-          <Text style={styles.name}>{msg.msg}: </Text>
+          <Text style={styles.name}>{msg.msg} </Text>
         </View>
       ))}
     </ScrollView>

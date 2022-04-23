@@ -1,6 +1,9 @@
 export const ORDER_STATUS = {
     1: {
       label: "Shipping"
+    },
+    0: {
+      label: "Confirmed"
     }
 }
 export const IMAGE_ENDPOINT ='https://api.ntustreamhub.com/uploads'

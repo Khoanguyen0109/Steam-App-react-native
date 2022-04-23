@@ -9,7 +9,7 @@ import {AuthContext} from '../../provider/AuthProvider';
 import {AxiosContext} from '../../provider/AxiosProvider';
 import CommentView from './CommentView';
 import {io} from 'socket.io-client';
-import { cloneDeep } from 'lodash';
+import {cloneDeep} from 'lodash';
 
 const styles = StyleSheet.create({
   root: {
@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     bottom: 200,
     width: '100%',
-
   },
 });
 function LiveStream(props) {
@@ -75,6 +74,7 @@ function LiveStream(props) {
   const {currentUser} = authContext.authState;
 
   const [streamUrl, setStreamUrl] = useState();
+  const [streamId, setStreamId] = useState();
   const [messages, setMessages] = useState([]);
   const [chatMessage, setChatMessage] = useState('');
   const socketRef = useRef();
@@ -82,7 +82,7 @@ function LiveStream(props) {
     try {
       socketRef.current = io('https://api.ntustreamhub.com', {
         auth: {
-          streamId: props.id,
+          streamId: streamId,
           firstName: currentUser.firstName,
           lastName: currentUser.lastName,
         },
@@ -91,14 +91,15 @@ function LiveStream(props) {
       console.log(`Connecting socket...`);
 
       socketRef.current.on('chat message', msg => {
-        console.log('msg', msg);
-        setMessages(cloneDeep([...messages, msg]));
+         messages.push(msg)
+        setMessages( cloneDeep(messages));
       });
     } catch (error) {
       console.log('error', error);
     }
   };
-  console.log('messages.length', messages.length)
+
+  console.log('messages.length', messages);
   const submitChatMessage = () => {
     socketRef.current.emit('chat message', chatMessage);
     setChatMessage('');
@@ -152,7 +153,9 @@ function LiveStream(props) {
           title: title,
           description: description,
         });
+
         setStreamUrl(res.data.data.pushStreamUrl);
+        setStreamId(res.data.data.id);
       } catch (error) {
         Toast.show({description: 'Create Live stream failed'});
       }
@@ -186,20 +189,22 @@ function LiveStream(props) {
       <View style={styles.commentView}>
         <CommentView messages={messages} />
       </View>
+      {streamId && (
+        <View style={styles.inputbox}>
+          <View width={250}>
+            <Input
+              style={styles.input}
+              value={chatMessage}
+              placeholder="Add Comment"
+              onChangeText={setChatMessage}
+            />
+          </View>
 
-      <View style={styles.inputbox}>
-        <View width={250}>
-          <Input
-            style={styles.input}
-            value={chatMessage}
-            placeholder="Add Comment"
-            onChangeText={setChatMessage}
-          />
+          <SizedBox width={12} />
+          <Button onPress={submitChatMessage}>Send</Button>
         </View>
+      )}
 
-        <SizedBox width={12} />
-        <Button onPress={submitChatMessage}>Send</Button>
-      </View>
       <View style={styles.buttonGroup}>
         <Button style={styles.backButton} onPress={() => navigation.goBack()}>
           Back

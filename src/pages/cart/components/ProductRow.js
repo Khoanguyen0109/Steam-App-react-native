@@ -24,7 +24,9 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    backgroundColor: '#EAEAEA',
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: 'white',
  
   },
   image: {
@@ -95,7 +97,7 @@ function ProductRow(props) {
           </Text>
           <SizedBox height={18}/>
           <Text style={styles.price}>
-              {price}
+              ${price}
           </Text>
       </View>
       <SizedBox width={12}/>

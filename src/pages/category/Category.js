@@ -6,6 +6,7 @@ import ProductCard from '../../components/ProductCard/ProductCard';
 import SizedBox from '../../components/SizeBox/SizeBox';
 import {StyleSheet, View, Text, SafeAreaView} from 'react-native';
 import { AxiosContext } from '../../provider/AxiosProvider';
+import { IMAGE_ENDPOINT } from '../../utils';
 
 const styles = StyleSheet.create({
   root: {
