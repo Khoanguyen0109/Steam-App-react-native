@@ -64,6 +64,7 @@ function Discover(props) {
   // }, []);
   useEffect(() => {
     getStreamList();
+
   }, [isFocused]);
 
 

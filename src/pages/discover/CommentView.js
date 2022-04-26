@@ -10,7 +10,8 @@ const styles = StyleSheet.create({
   root: {
     width: '100%',
     padding: 16,
-    height: 300,
+    maxHeight: 200,
+    minHeight: 50,
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: 'transparent',
@@ -48,7 +49,7 @@ function CommentView(props) {
           marginBottom={2}
           >
           <Text style={styles.name}>
-            {msg.firstName} {msg.lastName}:{' '}
+            {msg?.firstName} {msg?.lastName}:{' '}
           </Text>
           <Text style={styles.name}>{msg.msg} </Text>
         </View>

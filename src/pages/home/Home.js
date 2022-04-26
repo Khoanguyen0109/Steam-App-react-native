@@ -12,7 +12,7 @@ import {categories} from '../category/utils';
 import CategoryList from './CategoryList';
 import {AxiosContext} from '../../provider/AxiosProvider';
 import {debounce} from 'lodash';
-import { IMAGE_ENDPOINT } from '../../utils';
+import {IMAGE_ENDPOINT} from '../../utils';
 
 const styles = StyleSheet.create({
   root: {
@@ -45,7 +45,6 @@ function Home() {
     } catch (error) {}
   };
   const onSearch = value => {
-    console.log('value', value);
     setSearchText(value);
     debounce(() => getSearchProduct(value), 500)();
   };
@@ -67,18 +66,18 @@ function Home() {
         />
         <SizedBox height={24} />
         {productList ? (
-          productList.map(item => (
-            <ProductCard
-              id={item.id}
-              name={item.name}
-              image={{
-                uri: `${IMAGE_ENDPOINT}/${item.images[0].name}`,
-              }}
-              price={item.price}
-        
-            />
-          ))
-       
+          <Flex flexDirection="row" wrap="wrap">
+            {productList.map(item => (
+              <ProductCard
+                id={item.id}
+                name={item.name}
+                image={{
+                  uri: `${IMAGE_ENDPOINT}/${item.images[0].name}`,
+                }}
+                price={item.price}
+              />
+            ))}
+          </Flex>
         ) : (
           <View>
             <View style={{width: 343, height: 206}}>

@@ -8,7 +8,7 @@ import {
   Text,
   View,
 } from 'native-base';
-import React, {useContext, useState, useEffect ,useRef} from 'react';
+import React, {useContext, useState, useEffect, useRef} from 'react';
 import {StyleSheet} from 'react-native';
 import {io} from 'socket.io-client';
 import SizedBox from '../../components/SizeBox/SizeBox';
@@ -16,7 +16,7 @@ import {NodePlayerView} from 'react-native-nodemediaclient';
 import CommentView from './CommentView';
 import {AuthContext} from '../../provider/AuthProvider';
 import {Dimensions} from 'react-native';
-import { cloneDeep } from 'lodash';
+import {cloneDeep} from 'lodash';
 
 const windowHeight = Dimensions.get('screen').height;
 const styles = StyleSheet.create({
@@ -37,18 +37,25 @@ const styles = StyleSheet.create({
   },
   commentView: {
     position: 'absolute',
-    bottom: -100,
+    bottom: 130,
     width: '100%',
-
   },
   inputbox: {
     position: 'absolute',
     display: 'flex',
     flexDirection: 'row',
-    bottom: 0,
+    bottom: 50,
     padding: 16,
     width: '100%',
     backgroundColor: 'transparent',
+  },
+  buttonGroup: {
+    height: 50,
+    backgroundColor: 'red',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   input: {
     width: 200,
@@ -67,7 +74,6 @@ function Stream(props) {
   const {currentUser} = authContext.authState;
   const socketRef = useRef();
 
-  console.log('props :>> ', props);
   const initSocket = () => {
     try {
       socketRef.current = io('https://api.ntustreamhub.com', {
@@ -79,23 +85,27 @@ function Stream(props) {
       });
       //   console.log('socket :>> ', socket);
       console.log(`Connecting socket...`);
-
+      console.log('socketRef', socketRef.current)
       socketRef.current.on('chat message', msg => {
-        console.log('msg', msg);
-        setMessages( cloneDeep([...messages, msg]));
-      });
+        console.log('msg', msg)
+        messages.push(msg)
+       setMessages( cloneDeep(messages));
+     });
     } catch (error) {
       console.log('error', error);
     }
   };
 
   const submitChatMessage = () => {
-    console.log('object', chatMessage);
     socketRef.current.emit('chat message', chatMessage);
     setChatMessage('');
   };
   useEffect(() => {
     initSocket();
+    if(isFocues){
+      setMessages([])
+      setChatMessage('')
+    }
     return () => {
       socketRef.current.disconnect();
     };
@@ -106,7 +116,7 @@ function Stream(props) {
         key={props.id}
         style={styles.camView}
         inputUrl={props.playStreamUrl}
-        scaleMode={'ScaleAspectFill'}
+        scaleMode={'ScaleToFill'}
         bufferTime={300}
         maxBufferTime={1000}
         autoplay={true}
@@ -115,10 +125,9 @@ function Stream(props) {
         <Text style={styles.title}>{props.title}</Text>
         <Text style={styles.title}>{props.title}</Text>
       </View>
-    <View style={styles.commentView}>
-    <CommentView messages={messages} />
-
-    </View>
+      <View style={styles.commentView}>
+        <CommentView messages={messages} />
+      </View>
 
       <View style={styles.inputbox}>
         <View width={250}>
@@ -132,6 +141,14 @@ function Stream(props) {
 
         <SizedBox width={12} />
         <Button onPress={submitChatMessage}>Send</Button>
+      </View>
+      <View style={styles.buttonGroup}>
+      <Button  onPress={() => navigation.goBack()}>
+          Back
+        </Button>
+        <Button style={styles.live} onPress={()=>{}}>
+          asdasds
+        </Button>
       </View>
     </View>
   );

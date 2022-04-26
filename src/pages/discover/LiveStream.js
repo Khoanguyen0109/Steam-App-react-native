@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   commentView: {
     position: 'absolute',
     backgroundColor: 'transparent',
-    bottom: 200,
+    bottom: 150,
     width: '100%',
   },
 });
@@ -91,6 +91,7 @@ function LiveStream(props) {
       console.log(`Connecting socket...`);
 
       socketRef.current.on('chat message', msg => {
+        console.log('msg shop', msg)
          messages.push(msg)
         setMessages( cloneDeep(messages));
       });
@@ -99,13 +100,16 @@ function LiveStream(props) {
     }
   };
 
-  console.log('messages.length', messages);
   const submitChatMessage = () => {
     socketRef.current.emit('chat message', chatMessage);
     setChatMessage('');
   };
   useEffect(() => {
     initSocket();
+    if(isFocues){
+      setMessages([])
+      setChatMessage('')
+    }
     return () => {
       socketRef.current.disconnect();
     };
@@ -141,8 +145,12 @@ function LiveStream(props) {
     requestCameraPermission();
   }, []);
 
-  const onBack = () => {
+  const onBack = async () => {
+    setStreamId()
     setStreamUrl('');
+    const res = await authAxios.put(`/streams/${streamId}`, {
+      isLive: false
+    })
     navigation.navigate('ShopAccount');
     camViewRef.current.stop();
   };
@@ -160,12 +168,18 @@ function LiveStream(props) {
         Toast.show({description: 'Create Live stream failed'});
       }
     } else {
-      onBack();
+      try {
+   
+        onBack();
+
+      } catch (error) {
+          console.log('error', error)
+      }
     }
   };
   useEffect(() => {
     if (streamUrl) {
-      console.log('streamUrl', streamUrl);
+      console.log('streamUrl', streamUrl)
       camViewRef.current.start();
     }
   }, [streamUrl]);
