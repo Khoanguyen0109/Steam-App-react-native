@@ -58,7 +58,9 @@ function OrderDetail(props) {
   const totalItem = orderDetail?.products?.reduce(function (acc, obj) {
     return acc + obj?.order_products.price;
   }, 0);
-
+  const quantity = orderDetail?.products?.reduce(function (acc, obj) {
+    return acc + (obj?.order_products?.quantity);
+  }, 0);
   return (
     <Layout>
       <View>
@@ -91,7 +93,7 @@ function OrderDetail(props) {
       <View>
         <Text style={styles.title}>Payment Details</Text>
         <SizedBox height={12} />
-        <PaymentDetail price={totalItem} />
+        <PaymentDetail price={totalItem} status={orderDetail?.status} quantity={quantity} />
       </View>
       <SizedBox height={50} />
 
