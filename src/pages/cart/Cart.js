@@ -1,4 +1,5 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
+import { cloneDeep } from 'lodash';
 import {Center, Text, View} from 'native-base';
 import React, {useContext, useState, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
@@ -35,6 +36,8 @@ function Cart(props) {
   // const cartList = [1, 2];
   const isFocused = useIsFocused();
   const [cartList, setCartList] = useState([]);
+  const [quantity, setQuantity] = useState(0)
+  const [totalPrice, setTotalPrice] = useState(0)
   const [cart, setCart] = useState([]);
   const {publicAxios, authAxios} = useContext(AxiosContext);
   const onRemoveProduct = async(cartItemId) => {
@@ -58,7 +61,16 @@ function Cart(props) {
         });
         // cartList.push(cartShop.cartItems);
       });
-      setCartList(cartList);
+      setCartList( cloneDeep( cartList));
+      const totalItem = cartList.reduce(function (acc, obj) {
+        return acc + (obj?.quantity * obj?.product.price);
+      }, 0);
+      const quantity = cartList.reduce(function (acc, obj) {
+        return acc + (obj?.quantity);
+      }, 0);
+
+      setTotalPrice(totalItem)
+      setQuantity(quantity)
     } catch (error) {
       console.log('error :>> ', error);
     }
@@ -66,15 +78,10 @@ function Cart(props) {
   useEffect(() => {
     getCart();
   }, [isFocused]);
-  const totalItem = cartList.reduce(function (acc, obj) {
-    console.log('acc', obj);
-    return acc + obj?.quantity * obj?.product.price;
-  }, 0);
-
+  
   const updateCartItem = async(cartItem , quantity) => {
-    console.log('cartItem :>> ', cartItem);
     try {
-      const res = await authAxios.put(`carts/${cartItem.id}`, {
+      const res = await authAxios.put(`carts/${cartItem}`, {
         quantity: quantity
       })
       // if(quantity ===0 ){
@@ -82,7 +89,7 @@ function Cart(props) {
 
       // }
     } catch (error) {
-      
+      console.log('error :>> ', error.response.data);
     }
   }
 
@@ -108,8 +115,8 @@ function Cart(props) {
           <SizedBox height={32} />
           <View style={styles.summary}>
             <View style={styles.summaryItem}>
-              <Text fontSize={12}>Items ({`${cartList.length}`})</Text>
-              <Text fontSize={12}>${totalItem}</Text>
+              <Text fontSize={12}>Items ({`${quantity}`})</Text>
+              <Text fontSize={12}>${totalPrice}</Text>
             </View>
             <SizedBox height={12} />
             <View style={styles.summaryItem}>
@@ -123,7 +130,7 @@ function Cart(props) {
               </Text>
               <Text fontSize={12} fontWeight="700" color="#006FBF">
                 {' '}
-                ${totalItem}
+                ${totalPrice}
               </Text>
             </View>
           </View>

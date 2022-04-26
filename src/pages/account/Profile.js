@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     height: 72,
     width: 72,
     borderRadius: 72 / 2,
-    backgroundColor: 'gray'
+    backgroundColor: 'gray',
   },
   name: {
     fontSize: 14,
@@ -84,19 +84,17 @@ function Profile(props) {
   return (
     <SafeAreaView>
       <View style={styles.info}>
-        <View style={styles.uploadButton}>
-          {/* <AccountDefail size={30} /> */}
-        </View>
-        {/* <IconButton
+        <IconButton
+          style={styles.uploadButton}
           onPress={pickImage}
           icon={
             <Icon
-              as={<MaterialIcons name="add-a-photo" />}
+              as={<MaterialIcons name="person" />}
               size={8}
               color="white"
             />
           }
-        /> */}
+        />
         <SizedBox width={12} />
         <Text style={styles.name}>{name}</Text>
       </View>

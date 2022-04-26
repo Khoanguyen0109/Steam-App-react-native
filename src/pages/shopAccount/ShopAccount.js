@@ -1,5 +1,5 @@
 import {Button, Center, Icon, IconButton, Text, View} from 'native-base';
-import React from 'react';
+import React , {useContext} from 'react';
 import {StyleSheet, SafeAreaView} from 'react-native';
 // import * as ImagePicker from 'expo-image-picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -8,6 +8,7 @@ import EButton from '../../components/EButton/Ebutton';
 import CreateProductIcon from '../../../assets/icons/create_product.svg';
 import Row from '../account/components/Row';
 import {useNavigation} from '@react-navigation/native';
+import { AuthContext } from '../../provider/AuthProvider';
 
 const styles = StyleSheet.create({
   root: {
@@ -58,6 +59,8 @@ const styles = StyleSheet.create({
 });
 function ShopAccount() {
   const navigation = useNavigation();
+  const authContext = useContext(AuthContext);
+  const {currentUser } = authContext.authState;
   const tab = [
     {
       title: 'Shop Profile',
@@ -98,14 +101,14 @@ function ShopAccount() {
           style={styles.uploadButton}
           icon={
             <Icon
-              as={<MaterialIcons name="add-a-photo" />}
+              as={<MaterialIcons name="person" />}
               size={8}
               color="black"
             />
           }
         />
         <SizedBox width={12} />
-        <Text style={styles.shopName}>Shop name</Text>
+        <Text style={styles.shopName}>{currentUser.firstName} {currentUser.lastName}</Text>
       </View>
       <SizedBox height={20} />
       <View style={styles.root}>
