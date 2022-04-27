@@ -110,6 +110,7 @@ function Stream(props) {
       socketRef.current.disconnect();
     };
   }, [isFocues]);
+  const shopName =`@${props?.shop?.firstName.toLowerCase()}${props?.shop?.lastName.toLowerCase()}`
   return (
     <View style={styles.root}>
       <NodePlayerView
@@ -122,8 +123,11 @@ function Stream(props) {
         autoplay={true}
       />
       <View style={styles.boxtitle}>
-        <Text style={styles.title}>{props.title}</Text>
-        <Text style={styles.title}>{props.title}</Text>
+      <Text style={styles.title}>{shopName}</Text>
+
+        <Text style={styles.title}>{props?.title}</Text>
+        <Text style={styles.title}>{props?.description}</Text>
+
       </View>
       <View style={styles.commentView}>
         <CommentView messages={messages} />
