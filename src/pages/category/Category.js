@@ -16,9 +16,7 @@ const styles = StyleSheet.create({
 });
 function Category(props) {
   const route = useRoute();
-  console.log('route.params', route.params)
   const {id} = route.params;
-  console.log('object', route.params)
   const {publicAxios} = useContext(AxiosContext);
 
   const [productList, setProductList] = useState([]);
@@ -32,7 +30,6 @@ function Category(props) {
       console.log('error', error);
     }
   };
-  console.log('productList', productList);
   useEffect(() => {
     getProduct();
   }, []);

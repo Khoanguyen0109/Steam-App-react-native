@@ -16,7 +16,7 @@ function MoreCategory() {
     // <SafeAreaView>
     <ScrollView style={styles.root}>
       {categories.map((item) => (
-        <CategoryRow title={item.label} icon={item.icon()} />
+        <CategoryRow id={item.id} title={item.label} icon={item.icon()} />
       ))}
     </ScrollView>
 

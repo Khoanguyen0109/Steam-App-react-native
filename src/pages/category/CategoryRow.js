@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
   },
 });
 function CategoryRow(props) {
-  const { title, icon } = props;
+  const { id, title, icon } = props;
   const navigation = useNavigation();
   const ouRoute = () => {
-    navigation.navigate('Category', { name: title });
+    navigation.navigate('Category', { id, name: title });
   };
   return (
     <Pressable style={styles.root} onPress={() => ouRoute()}>
