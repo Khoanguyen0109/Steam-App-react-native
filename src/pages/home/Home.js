@@ -1,4 +1,4 @@
-import {Icon, ScrollView} from 'native-base';
+import {Flex, Icon, ScrollView} from 'native-base';
 import React, {useState, useContext} from 'react';
 import {StyleSheet, View, Text, SafeAreaView} from 'react-native';
 import EInput from '../../components/EInput/EInput';
