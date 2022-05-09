@@ -31,7 +31,7 @@ function Home() {
   const getSearchProduct = async name => {
     console.log('name', name)
     try {
-      if (name === '' || !name) {
+      if (name === '') {
         setProductList(null);
       } else {
         const res = await publicAxios.get('/products', {
@@ -67,7 +67,7 @@ function Home() {
         <SizedBox height={24} />
         {searchText ? (
           <Flex flexDirection="row" wrap="wrap">
-            {productList.map(item => (
+            {productList&& productList?.map(item => (
               <ProductCard
                 id={item.id}
                 name={item.name}
