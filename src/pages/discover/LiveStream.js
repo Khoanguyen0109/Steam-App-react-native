@@ -66,15 +66,14 @@ function LiveStream(props) {
   const isFocues = useIsFocused();
 
   const route = useRoute();
-  const {title, description} = route.params;
+  const {title, description, streamUrl, streamId} = route.params;
   const navigation = useNavigation();
   const camViewRef = useRef();
   const {publicAxios, authAxios} = useContext(AxiosContext);
   const authContext = useContext(AuthContext);
   const {currentUser} = authContext.authState;
-
-  const [streamUrl, setStreamUrl] = useState();
-  const [streamId, setStreamId] = useState();
+  const [start, setStart] = useState(false);
+  // const [streamUrl, setStreamUrl] = useState();
   const [messages, setMessages] = useState([]);
   const [chatMessage, setChatMessage] = useState('');
   const socketRef = useRef();
@@ -91,9 +90,9 @@ function LiveStream(props) {
       console.log(`Connecting socket...`);
 
       socketRef.current.on('chat message', msg => {
-        console.log('msg shop', msg)
-         messages.push(msg)
-        setMessages( cloneDeep(messages));
+        console.log('msg shop', msg);
+        messages.push(msg);
+        setMessages(cloneDeep(messages));
       });
     } catch (error) {
       console.log('error', error);
@@ -106,9 +105,9 @@ function LiveStream(props) {
   };
   useEffect(() => {
     initSocket();
-    if(isFocues){
-      setMessages([])
-      setChatMessage('')
+    if (isFocues) {
+      setMessages([]);
+      setChatMessage('');
     }
     return () => {
       socketRef.current.disconnect();
@@ -146,43 +145,28 @@ function LiveStream(props) {
   }, []);
 
   const onBack = async () => {
-    setStreamId()
-    setStreamUrl('');
+    setStart(false);
     const res = await authAxios.put(`/streams/${streamId}`, {
-      isLive: false
-    })
+      isLive: false,
+    });
     navigation.navigate('ShopAccount');
     camViewRef.current.stop();
   };
-  const createStream = async () => {
-    if (!streamUrl) {
-      try {
-        const res = await authAxios.post('streams', {
-          title: title,
-          description: description,
-        });
 
-        setStreamUrl(res.data.data.pushStreamUrl);
-        setStreamId(res.data.data.id);
-      } catch (error) {
-        Toast.show({description: 'Create Live stream failed'});
-      }
+  const createStream = async () => {
+    if (!start) {
+      camViewRef.current.start();
+      setStart(true);
     } else {
       try {
-   
         onBack();
-
       } catch (error) {
-          console.log('error', error)
+        console.log('error', error);
       }
     }
   };
-  useEffect(() => {
-    if (streamUrl) {
-      console.log('streamUrl', streamUrl)
-      camViewRef.current.start();
-    }
-  }, [streamUrl]);
+
+  console.log('start', start);
   return (
     <View style={styles.root}>
       <NodeCameraView
@@ -203,7 +187,7 @@ function LiveStream(props) {
       <View style={styles.commentView}>
         <CommentView messages={messages} />
       </View>
-      {streamId && (
+      {start && (
         <View style={styles.inputbox}>
           <View width={250}>
             <Input
@@ -224,7 +208,7 @@ function LiveStream(props) {
           Back
         </Button>
         <Button style={styles.live} onPress={createStream}>
-          {!streamUrl ? 'Live now' : 'Stop Stream'}
+          {!start ? 'Live now' : 'Stop Stream'}
         </Button>
         {/* <Button style={styles.live} onPress={()=> camViewRef.current.start()}>
           Publish
