@@ -79,8 +79,8 @@ function Stream(props) {
       socketRef.current = io('https://api.ntustreamhub.com', {
         auth: {
           streamId: props.id,
-          firstName: currentUser.firstName,
-          lastName: currentUser.lastName,
+          firstName: currentUser?.firstName,
+          lastName: currentUser?.lastName,
         },
       });
       //   console.log('socket :>> ', socket);

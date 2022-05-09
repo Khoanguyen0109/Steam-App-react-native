@@ -82,8 +82,8 @@ function LiveStream(props) {
       socketRef.current = io('https://api.ntustreamhub.com', {
         auth: {
           streamId: streamId,
-          firstName: currentUser.firstName,
-          lastName: currentUser.lastName,
+          firstName: currentUser?.firstName,
+          lastName: currentUser?.lastName,
         },
       });
       //   console.log('socket :>> ', socket);

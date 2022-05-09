@@ -108,7 +108,7 @@ function ShopAccount() {
           }
         />
         <SizedBox width={12} />
-        <Text style={styles.shopName}>{currentUser?.firstName} {currentUser.lastName}</Text>
+        <Text style={styles.shopName}>{currentUser?.firstName} {currentUser?.lastName}</Text>
       </View>
       <SizedBox height={20} />
       <View style={styles.root}>
