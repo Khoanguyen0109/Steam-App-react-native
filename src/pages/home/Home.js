@@ -29,8 +29,9 @@ function Home() {
   const [productList, setProductList] = useState();
   const {publicAxios} = useContext(AxiosContext);
   const getSearchProduct = async name => {
+    console.log('name', name)
     try {
-      if (name === '') {
+      if (name === '' || !name) {
         setProductList(null);
       } else {
         const res = await publicAxios.get('/products', {
@@ -39,7 +40,6 @@ function Home() {
           },
         });
         const data = res.data.data;
-        console.log('data', data);
         setProductList(data);
       }
     } catch (error) {}
@@ -65,7 +65,7 @@ function Home() {
           }
         />
         <SizedBox height={24} />
-        {productList ? (
+        {searchText ? (
           <Flex flexDirection="row" wrap="wrap">
             {productList.map(item => (
               <ProductCard
