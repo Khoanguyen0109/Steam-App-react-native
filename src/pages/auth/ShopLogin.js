@@ -66,7 +66,7 @@ function ShopLogin(props) {
   const {publicAxios} = useContext(AxiosContext);
   const authContext = useContext(AuthContext)
   const [show, setShow] = useState(false);
-
+  const [loading, setLoading] = useState(false)
   const {control, handleSubmit, error} = useForm({
     defaultValues: {
       email: '',
@@ -80,6 +80,7 @@ function ShopLogin(props) {
     console.log('data :>> ', data);
     const {email, password} = data;
     try {
+      setLoading(true)
       const response = await publicAxios.post('/shops/login', {
         email,
         password,
@@ -87,6 +88,7 @@ function ShopLogin(props) {
       console.log('first', response.data);
 
       const {token, shop} = response.data;
+      setLoading(true)
       authContext.setAuthState({
         currentUser: shop,
         accessToken: token,
@@ -108,7 +110,9 @@ function ShopLogin(props) {
       );
     } catch (error) {
       console.log('object', error)
-      Toast.show({description: 'Login Failed'});
+      if(!loading){
+        // Toast.show({description: 'Login Failed'});
+      }
 
       // Alert.alert('Login Failerd' );
     }

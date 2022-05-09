@@ -63,7 +63,7 @@ function ProductOrderRow(props) {
           flexDirection='row'
           justifyContent='space-between'
         >
-          <Text style={styles.price}>{price}</Text>
+          <Text style={styles.price}>{price}$</Text>
           <Text style={styles.quantity}>Qty: {quantity}</Text>
         </View>
       </View>

@@ -123,17 +123,17 @@ function CreateProduct() {
   const createProduct = async data => {
     if (route?.params?.id) {
       try {
-        const res = await authAxios.put(`/products/${id}`, {
+        const res = await authAxios.put(`/products/${route?.params?.id}`, {
           ...data,
           price: parseInt(data.price),
           category: parseInt(data.categoryId),
           quantity: parseInt(data.quantity),
         });
-        Toast.show({description: 'Create Successfully'});
+        Toast.show({description: 'Update Successfully'});
         navigation.goBack();
       } catch (error) {
         console.log('error :>> ', error);
-        Toast.show({description: 'Create Failed'});
+        Toast.show({description: 'Update Failed'});
       }
     } else {
       try {

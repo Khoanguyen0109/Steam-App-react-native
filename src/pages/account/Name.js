@@ -20,8 +20,8 @@ function Name() {
    : 'shops'
     const { control, handleSubmit } = useForm({
     defaultValues: {
-      firstName: currentUser.firstName,
-      lastName: currentUser.lastName,
+      firstName: currentUser?.firstName,
+      lastName: currentUser?.lastName,
     },
   });
   
